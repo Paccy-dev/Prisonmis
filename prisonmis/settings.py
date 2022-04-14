@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-bc=axb=jh!xcr9%5$^oqvsv#t*bg$so=(fj9no5khhn+tj@5_i
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['prisonmis.herokuapp.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'prisonmis.herokuapp.com']
 
 
 # Application definition
@@ -52,10 +52,11 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'prisonmis.urls'
 
+TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [TEMPLATE_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -78,6 +79,14 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+
+        # 'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        # 'NAME': 'myproject',
+        # 'USER': 'myprojectuser',
+        # 'PASSWORD': 'password',
+        # 'HOST': 'localhost',
+        # 'PORT': '',
+
     }
 }
 
@@ -117,7 +126,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATIC_URL = '/static/'
+STATIC_URL = 'static/'
 
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
