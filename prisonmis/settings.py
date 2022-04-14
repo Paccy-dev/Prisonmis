@@ -77,7 +77,7 @@ WSGI_APPLICATION = 'prisonmis.wsgi.application'
 
 DATABASES = {
     'default': {
-        
+
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'prisonmis',
         'USER': 'postgres',
