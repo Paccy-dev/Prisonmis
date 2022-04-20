@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class Category(models.Model):
@@ -27,10 +29,15 @@ class Employee(models.Model):
     photo = models.ImageField(upload_to='photos/', default='avatar.png')
 
     def __str__(self):
-        return self.firstname
+        return self.firstname + ' ' + self.lastname
 
 
 class User(AbstractUser):
     employee = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
 
+
+@receiver(post_save, sender=Employee)
+def create_product(sender, instance, created, **kwargs):
+    if created:
+        User.objects.create_user(username=instance.firstname, password='user1234', employee=instance)

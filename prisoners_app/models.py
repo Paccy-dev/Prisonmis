@@ -11,8 +11,8 @@ class Case(models.Model):
 
 
 PRISONER_STATUS_CHOICES = (
-    ("1", "INMATE"),
-    ("2", "OUTMATE")
+    ("1", "IN_MATE"),
+    ("2", "OUT_MATE")
 )
 
 
@@ -27,7 +27,7 @@ class Prisoner(models.Model):
     photo = models.ImageField(upload_to='photos/', default='avatar.png')
 
     def __str__(self):
-        return self.firstname
+        return self.firstname + ' ' + self.lastname
 
 
 class Visitor(models.Model):
@@ -37,7 +37,7 @@ class Visitor(models.Model):
     phone = models.IntegerField()
 
     def __str__(self):
-        return self.firstname
+        return self.firstname + ' ' + self.lastname
 
 
 RELATIONSHIP_CHOICES = (
@@ -73,5 +73,4 @@ class Leave(models.Model):
     status = models.CharField(max_length=10, choices=LEAVE_STATUS_CHOICES)
 
     def __str__(self):
-
         return str(self.pk)
