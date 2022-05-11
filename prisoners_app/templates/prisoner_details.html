@@ -1,0 +1,26 @@
+
+{% load crispy_forms_tags %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+</head>
+<body class="container">
+    <h4>{{prisoner}}</h4>
+    <ul>  
+        <li>{{prisoner.firstname}}</li>
+        <li>{{prisoner.lastname}}</li>
+        <li>{{prisoner.email}}</li>
+        <li>{{prisoner.identification}}</li>
+        <li>{{prisoner.phone}}</li>
+        <li>{{prisoner.case}}</li>
+        <li>{{prisoner.status}}</li>
+        <li>{{prisoner.photo}}</li>
+    </ul>
+</body>
+</html>

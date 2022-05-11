@@ -1,0 +1,25 @@
+
+{% load crispy_forms_tags %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+</head>
+<body class="container">
+    <h4>{{employees}}</h4>
+    <ul>   
+    <li>{{employee.firstname}}</li>
+    <li>{{employee.lastname}}</li>
+    <li>{{employee.email}}</li>
+    <li>{{employee.Identification}}</li>
+    <li>{{employee.phone}}</li>
+    <li>{{employee.role}}</li>
+    <li>{{employee.photo}}</li>
+    </ul>
+</body>
+</html>
