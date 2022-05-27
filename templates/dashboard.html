@@ -1,0 +1,113 @@
+{% extends 'base1.html' %}
+{% load crispy_forms_tags %}
+{% block stylesheet %}
+<style>
+.stylo {
+    margin:10px 0;
+    font-size: 30px;
+    color: #29b7d3;
+}
+</style>
+{% endblock %}
+{% block content %}
+    <div class="btn-controls">
+        <div class="btn-box-row row-fluid">
+            <a href="{% url 'prisoners' %}" class="btn-box big span4"><i class=" icon-group"></i><b class="count">{{prisoners.count}}</b>
+                <p class="text-muted">
+                    Total prisoners</p>
+            </a><a href="{% url 'users' %}" class="btn-box big span4"><i class="icon-user"></i><b class="count">{{users.count}}</b>
+                <p class="text-muted">
+                    Total Users</p>
+            </a><a href="#" class="btn-box big span4"><i class="icon-bolt"></i><b class="count">15152</b>
+                <p class="text-muted">
+                    ------</p>
+            </a>
+        </div>
+        <div class="btn-box-row row-fluid">
+            <div class="span8">
+                <div class="row-fluid">
+                    <div class="span12">
+                        <a href="{% url 'cases' %}" class="btn-box small span4"><i class="icon-suitcase"></i><b class="count">{{cases.count}}</b><p class="text-muted">Case</p></a>
+                        <a href="{% url 'leaves' %}" class="btn-box small span4"><i class="icon-calendar"></i></i><b class="count">{{leaves.count}}</b><p class="text-muted">Leaves</p></a>
+                        <a href="{% url 'visitors' %}" class="btn-box small span4"><i class="icon-exchange"></i><b class="count">{{visitors.count}}</b><p class="text-muted">Visitors</p></a>
+                    </div>
+                </div>
+                <div class="row-fluid">
+                    <div class="span12">
+                        <a href="{% url 'transfers' %}" class="btn-box small span4"><i class="icon-random"></i><b class="count">{{transfers.count}}</b><p class="text-muted">Transfers</p></a>
+                        <a href="{% url 'complains' %}" class="btn-box small span4"><i class="icon-bullhorn"></i><b class="count">{{complains.count}}</b><p class="text-muted">Complains</p></a>
+                        <a href="{% url 'categorys' %}" class="btn-box small span4"><i class="icon-sort-down"></i><b class="count">{{categories.count}}</b><p class="text-muted">User categories</p></a>
+                    </div>
+                </div>
+            </div>
+            <ul class="widget widget-usage unstyled span4">
+                <p></p>
+                <strong class="pull-right">NATIONALITIES</strong>
+                <li>
+                    <p></p>
+                    <p>
+                        <strong>Rwandans</strong> <span class="pull-right small muted ">78%</span>
+                    </p>
+                    <div class="progress tight">
+                        <div class="bar" data-val=78></div>
+                    </div>
+                </li>
+                <li>
+                    <p>
+                        <strong>Burundians</strong> <span class="pull-right small muted">56%</span>
+                    </p>
+                    <div class="progress tight">
+                        <div class="bar bar-success" data-val=67></div>
+                    </div>
+                </li>
+                <li>
+                    <p>
+                        <strong>D.R.Cs</strong> <span class="pull-right small muted">44%</span>
+                    </p>
+                    <div class="progress tight">
+                        <div class="bar bar-warning" data-val=44></div>
+                    </div>
+                </li>
+                <li>
+                    <p>
+                        <strong>Ugandans</strong> <span class="pull-right small muted">67%</span>
+                    </p>
+                    <div class="progress tight">
+                        <div class="bar bar-danger" data-val=67></div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!--/#btn-controls end-->
+{% endblock %}
+{% block script %}
+<script>
+$('.count').each(function () {
+    $(this).prop('Counter',0).animate({
+        Counter: $(this).text()
+        }, {
+        duration: 3000,
+        easing: 'swing',
+        step: function (now) {
+            $(this).text(Math.ceil(now));
+        }
+    });
+});
+</script>
+<script>
+    $('.bar').each(function(){
+        var percent = $(this).data('val');
+        $(this).css("width",percent+'%');
+        $({animatedValue: 0}).animate({animatedValue: percent},{
+            duration: 5000,
+            step: function(){
+                $(this).attr('percent', Math.floor(this.animatedValue) + '%');
+            },
+            complete: function(){
+                $(this).attr('percent', Math.floor(this.animatedValue) + '%');
+            }
+        });
+    });
+</script>
+{% endblock %}

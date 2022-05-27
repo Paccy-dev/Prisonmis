@@ -1,22 +1,55 @@
-
+{% extends 'base1.html' %}
 {% load crispy_forms_tags %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
-</head>
-<body class="container">
-    <h4>{{visitor}}</h4>
-    <ul>  
-        <li>{{visitor.firstname}}</li>
-        <li>{{visitor.lastname}}</li>
-        <li>{{visitor.idenditification}}</li>
-        <li>{{visitor.phone}}</li>
-    </ul>
-</body>
-</html>
+{% block content %}
+<div class="module">
+    <div class="module-head">
+      <h3>
+          <span>Visitor details</span>
+          <a href="../" class="icon-fullscreen pull-right bordero" style="padding:0 10px;border-radius: 25%;"></a>
+      </h3>
+    </div>
+    <div class="module-body">
+      <h5>{{visitor}}</h5><hr>
+      <div class="btn-row row-fluid">
+        <div class="span5">
+          <div class="btn-row row-fluid">
+            <div class="span4">
+              <p>First Name <i class="pull-right"><i class="pull-right">:</i></i></p>
+              <p>Last Name <i class="pull-right">:</i></p>
+              <p>identification <i class="pull-right">:</i></p>
+              <p>Phone <i class="pull-right">:</i></p>
+            </div>
+            <div class="span8">
+              <p>{{visitor.firstname}}</p>
+              <p>{{visitor.lastname}}</p>
+              <p>{{visitor.identification}}</p>
+              <p>{{visitor.phone}}</p>
+            </div>
+            </div>
+        </div>
+        <div class="span3">
+          <div style="text-align: center;">
+            <br><br><hr>
+            <div class="btn-row">
+              <div class="span6">
+                <a class="btn btn-primary" href="{% url 'visitor_update' visitor.id %}">Edit</a>
+              </div>
+              <div class="span6">
+                <a class="btn btn-danger modal_delete" data-toggle="modal" data-target="#deletemodal" data-url="{% url 'visitor_delete' visitor.id %}" >Delete</a>
+              </div>  
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="deletemodal" tabindex="-1" role="dialog" aria-labelledby="deletemodalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-sm mymodal" role="document">
+          
+      </div>
+  </div><!-- /.delete modal -->
+  {% endblock %}
+  {% block script %}
+  <script src="{% static 'scripts/modal_delete.js' %}" type="text/javascript"></script>
+  {% endblock %}

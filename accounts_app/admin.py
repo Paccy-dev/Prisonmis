@@ -8,10 +8,7 @@ class UserAdmin(UserAdmin):
     # add_form = RegisterForm
     # form = UserUpdateForm
     model = User
-    list_display = ['username', 'email', 'first_name']
-
+    list_display = ['username', 'email', 'first_name',]
 
 admin.site.register(Category),
-admin.site.register(Role),
-admin.site.register(Employee),
 admin.site.register(User, UserAdmin)

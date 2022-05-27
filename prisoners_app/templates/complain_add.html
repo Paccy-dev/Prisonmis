@@ -1,0 +1,32 @@
+{% extends 'base1.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="module">  
+    <div class="module-head">
+        <h3>
+            <span>Complain Create Form</span>
+            <a href="../" class="icon-fullscreen pull-right bordero" style="padding:0 10px;border-radius: 25%;"></a>
+        </h3>
+    </div>
+    <div class="module-body"><hr>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row margino" style="margin: 0;">
+                <div class="col col-xs-3 ">{{c_form.prisoner|as_crispy_field}}</div>
+                <div class="col col-xs-3 ">{{c_form.date|as_crispy_field}}</div>
+                <div class="col col-xs-2 ">{{c_form.status|as_crispy_field}}</div>
+            </div>
+            <div class="row margino" style="margin: 0;">
+                    <div class="col col-xs-6 ">
+                        {{c_form.summary|as_crispy_field}}
+                        {{c_form.replied|as_crispy_field}}
+                    </div>
+                    <div class="col col-xs-3 ">
+                        <br><hr>
+                        <button type="submit" class="btn btn-primary">Create</button>
+                    </div>
+            </div>
+        </form>
+    <div>
+</div>   
+{% endblock %}

@@ -25,3 +25,13 @@ class Leave_Form(forms.ModelForm):
     class Meta:
         model = Leave
         fields = "__all__"
+
+class Transfer_Form(forms.ModelForm):
+    class Meta:
+        model = Transfer
+        fields = "__all__"
+
+class Complain_Form(forms.ModelForm):
+    class Meta:
+        model = Complain
+        fields = "__all__"

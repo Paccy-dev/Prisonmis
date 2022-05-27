@@ -1,19 +1,13 @@
+{% extends 'base1.html' %}
 {% load crispy_forms_tags %}
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
-</head>
-<body>
-    <form method="POST">
-        {% csrf_token %}
-        <p>Are you sure u want to logout out <strong>{{user}}</strong> ?</p>
-        <input type="submit">
-    </form>
-</body>
-</html>
+{% block content %}
+<div class="module">
+    <div class="module-body">
+        <form method="post">
+            {% csrf_token %}
+            <p>Are you sure u want to logout out <strong>{{user}}</strong> ?</p>
+            <input type="submit">
+        </form>
+    </div>
+</div>
+{% endblock %}

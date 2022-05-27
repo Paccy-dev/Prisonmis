@@ -1,15 +1,17 @@
 from multiprocessing import context
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.contrib import messages
-from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login,logout,authenticate
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from .forms import *
 from .models import *
+from prisoners_app.models import *
 
+    
 # Create your views here.
-def home(request):
-    return render(request,'index.html')
+def home_view(request):
+    return redirect('dashboard')
 
 def login_view(request):
     l_form = Login_Form()
@@ -21,151 +23,172 @@ def login_view(request):
             user = authenticate(username=username,password=password)
             if user is not None:
                 login(request,user)
+                page = request.GET.get('next')
+                if page:
+                    messages.success(request, f'Login successful')           
+                    return redirect(request.GET.get('next'))
+                else:
+                    messages.success(request, f'Login successful')           
+                    return redirect('dashboard')
+        else:
+            messages.warning(request, f"Login errors|User doesn't exist")
     context = {'l_form':l_form}
     return render(request,'login.html',context)
 
 def logout_view(request):
     user = request.user
-    logout(request)
+    if request.method == 'POST':
+        logout(request)
     context = {'user':user}
     return render(request,'logout.html',context)
 
+def card_view(request):
+    context = {}
+    return render(request, 'card.html',context)
+
+@login_required
+def dashboard_view(request):
+    users = User.objects.all()
+    prisoners = Prisoner.objects.all()
+    cases = Case.objects.all()
+    leaves = Leave.objects.all()
+    visitors = Visitor.objects.all()
+    transfers = Transfer.objects.all()
+    complains = Complain.objects.all()
+    categories = Category.objects.all()
+    if request.method == 'POST': 
+        logout(request)
+        return redirect('login')
+    context = {'users':users,'prisoners':prisoners,'cases':cases,'leaves':leaves,'visitors':visitors,'transfers':transfers,'complains':complains,'categories':categories}
+    return render(request, 'dashboard.html',context)
+    
+@login_required
 def categorys_view(request):
     categorys = Category.objects.all()
+    if request.method == 'POST':
+        name = str(request.POST.get('form'))
+        if name == 'delete':
+            pk = str(request.POST.get('instance_id'))
+            category = get_object_or_404(Category,id=pk)
+            category.delete()
+            messages.success(request, f'Category {category} - deletion successful')
+        else: 
+            logout(request)
+            return redirect('login')
     context = {'categorys':categorys}
     return render(request,'categorys.html',context)
 
+@login_required
 def category_add_view(request):
     c_form = Category_Form()
     if request.method == 'POST':
         c_form = Category_Form(request.POST)
-        c_form.save()
+        if c_form.is_valid():
+            c_form.save()
+            name = c_form.cleaned_data.get('name')
+            messages.success(request, f'Category {name} - creation successful')
+            return redirect('categorys')
     context = {'c_form':c_form}
     return render(request,'category_add.html',context)
 
+@login_required
 def category_details_view(request, pk):
     category = get_object_or_404(Category,id=pk)
+    if request.method == 'POST':
+        name = str(request.POST.get('form'))
+        if name == 'delete':
+            pk = str(request.POST.get('instance_id'))
+            category = get_object_or_404(Category,id=pk)
+            category.delete()
+            messages.success(request, f'Category {category} - deletion successful')
+            return redirect('categorys')
+        else: 
+            logout(request)
+            return redirect('login')
     context = {'category':category}    
     return render(request,'category_details.html',context)
 
+@login_required
 def category_update_view(request,pk):
     category = get_object_or_404(Category,id=pk)
     c_form = Category_Form(instance=category)
     if request.method == 'POST':
         c_form = Category_Form(request.POST,instance=category)
-        c_form.save()
+        if c_form.is_valid():
+            c_form.save()
+            messages.success(request, f'Category {category} - update successful')
+            return redirect('category_details', pk)
     context = {'c_form':c_form}
     return render(request,'category_update.html',context)
 
+@login_required
 def category_delete_view(request, pk):
     category = get_object_or_404(Category,id=pk)
-    if request.method == 'POST':
-        category.delete()
-    context = {'category':category}
-    return render(request,'category_delete.html',context)
+    context = {'instance':category}
+    return render(request,'modal_delete.html',context)
 
-def roles_view(request):
-    roles = Role.objects.all()
-    context = {'roles':roles}
-    return render(request,'roles.html',context)
-
-def role_add_view(request):
-    r_form = Role_Form()
-    if request.method == 'POST':
-        r_form = Role_Form(request.POST)
-        r_form.save()
-    context = {'r_form':r_form}
-    return render(request,'role_add.html',context)
-
-def role_details_view(request, pk):
-    role = get_object_or_404(Role,id=pk)
-    context = {'role':role}
-    return render(request,'role_details.html',context)
-
-def role_update_view(request,pk):
-    role = get_object_or_404(Role,id=pk)
-    r_form = Role_Form(instance=role)
-    if request.method == 'POST':
-        r_form = Role_Form(request.POST,instance=role)
-        r_form.save()
-    context = {'r_form':r_form}
-    return render(request,'role_update.html',context)
-
-def role_delete_view(request,pk):
-    role = get_object_or_404(Role,id=pk)
-    if request.method == 'POST':
-        role.delete()
-    context = {'role':role}
-    return render(request,'role_delete.html',context)
-
-def employees_view(request):
-    employees = Employee.objects.all()
-    context = {'employees':employees}
-    return render(request,'employees.html',context)
-
-def employee_add_view(request):
-    e_form = Employee_Form()
-    if request.method == 'POST':
-        e_form = Employee_Form(request.POST,request.FILES)
-        e_form.save()
-    context = {'e_form':e_form}
-    return render(request,'employee_add.html',context)
-
-def employee_details_view(request, pk):
-    employee = get_object_or_404(Employee,id=pk)
-    context = {'employee':employee}
-    return render(request,'employee_details.html',context)
-
-def employee_update_view(request,pk):
-    employee = get_object_or_404(Employee,id=pk)
-    e_form = Employee_Form(instance=employee)
-    if request.method == 'POST':
-        e_form = Employee_Form(request.POST,request.FILES,instance=employee)
-        e_form.save()
-    context = {'e_form':e_form}
-    return render(request,'employee_update.html',context)
-
-def employee_delete_view(request,pk):
-    employee = get_object_or_404(Employee,id=pk)
-    if request.method == 'POST':
-        employee.delete()
-    context = {'employee':employee}
-    return render(request,'employee_delete.html',context)
-
+@login_required
 def users_view(request):
     users = User.objects.all() 
+    if request.method == 'POST':
+        name = str(request.POST.get('form'))
+        if name == 'delete':
+            pk = str(request.POST.get('instance_id'))
+            user = get_object_or_404(User,id=pk)
+            user.delete()
+            messages.success(request, f'User {user} - deletion successful')
+            return redirect('users')
+        else: 
+            logout(request)
+            return redirect('login')
     context = {'users':users}
     return render(request,'users.html',context)
 
+@login_required
 def user_add_view(request):
     u_form = User_Form()
     if request.method == 'POST':
-        u_form = User_Form(request.POST)
+        u_form = User_Form(request.POST,)
         if u_form.is_valid():
             u_form.save()
+            name = u_form.cleaned_data.get('username')
+            messages.success(request, f'User {name} - creation successful')
+            return redirect('users')
     context = {'u_form':u_form}
     return render(request,'user_add.html',context)
 
+@login_required
 def user_details_view(request, pk):
     user = get_object_or_404(User,id=pk)
+    if request.method == 'POST':
+        name = str(request.POST.get('form'))
+        if name == 'delete':
+            pk = str(request.POST.get('instance_id'))
+            user = get_object_or_404(User,id=pk)
+            user.delete()
+            messages.success(request, f'User {user} - deletion successful')
+            return redirect('users')
+        else: 
+            logout(request)
+            return redirect('login')
     context = {'user':user}
     return render(request,'user_details.html',context)
 
+@login_required
 def user_update_view(request,pk):
     user = get_object_or_404(User,id=pk)
-    u_form = User_Form(instance=user)
+    p_form = Profile_Form(instance=user)
     if request.method == 'POST':
-        u_form = User_Form(request.POST,instance=user)
-        if u_form.is_valid():
-            u_form.save()
-    context = {'u_form':u_form}
+        p_form = Profile_Form(request.POST,request.FILES,instance=user)
+        if p_form.is_valid():
+            p_form.save()
+            messages.success(request, f'User {user} - update successful')
+            return redirect('user_details', pk)
+    context = {'p_form':p_form}
     return render(request,'user_update.html',context)
 
+@login_required
 def user_delete_view(request,pk):
     user = get_object_or_404(User,id=pk)
-    if request.method == 'POST':
-            user.delete()
-    context = {'user':user}
-    return render(request,'user_delete.html',context)
-
-    
+    context = {'instance':user}
+    return render(request,'modal_delete.html',context)

@@ -1,24 +1,59 @@
-
+{% extends 'base1.html' %}
 {% load crispy_forms_tags %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
-</head>
-<body class="container">
-    <h4>{{leave}}</h4>
-    <ul>  
-        <li>{{leave.prisoner}}</li>
-        <li>{{leave.start_date}}</li>
-        <li>{{leave.end_date}}</li>
-        <li>{{leave.reason}}</li>
-        <li>{{leave.approval}}</li>
-        <li>{{leave.status}}</li>
-    </ul>
-</body>
-</html>
+{% block content %}
+<div class="module">
+    <div class="module-head">
+      <h3>
+          <span>Leave details</span>
+          <a href="../" class="icon-fullscreen pull-right bordero" style="padding:0 10px;border-radius: 25%;"></a>
+      </h3>
+    </div>
+    <div class="module-body">
+      <h5>{{leave}}</h5><hr>
+      <div class="btn-row row-fluid">
+        <div class="span5">
+          <div class="btn-row row-fluid">
+            <div class="span4">
+              <p>Prisoner <i class="pull-right"><i class="pull-right">:</i></i></p>
+              <p>Starting date <i class="pull-right">:</i></p>
+              <p>Ending date <i class="pull-right">:</i></p>
+              <p>Reason <i class="pull-right">:</i></p>
+              <p>Approval <i class="pull-right">:</i></p>
+              <p>Status <i class="pull-right">:</i></p>
+            </div>
+            <div class="span8">
+              <p>{{leave.prisoner}}</p>
+              <p>{{leave.start_date}}</p>
+              <p>{{leave.end_date}}</p>
+              <p>{{leave.reason}}</p>
+              <p>{{leave.approval}}</p>
+              <p>{{leave.status}}</p>
+            </div>
+            </div>
+        </div>
+        <div class="span3">
+          <div style="text-align: center;">
+            <br><br><br><hr>
+            <div class="btn-row">
+              <div class="span6">
+                <a class="btn btn-primary" href="{% url 'leave_update' leave.id %}">Edit</a>
+              </div>
+              <div class="span6">
+                <a class="btn btn-danger modal_delete" data-toggle="modal" data-target="#deletemodal" data-url="{% url 'leave_delete' leave.id %}" >Delete</a>
+              </div>  
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="deletemodal" tabindex="-1" role="dialog" aria-labelledby="deletemodalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-sm mymodal" role="document">
+          
+      </div>
+  </div><!-- /.delete modal -->
+  {% endblock %}
+  {% block script %}
+  <script src="{% static 'scripts/modal_delete.js' %}" type="text/javascript"></script>
+  {% endblock %}

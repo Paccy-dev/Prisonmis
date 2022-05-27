@@ -15,6 +15,11 @@ PRISONER_STATUS_CHOICES = (
     ("2", "OUT_MATE")
 )
 
+GENDER_CHOICES = (
+    ("1", "Male"),
+    ("2", "Female")
+)
+
 
 class Prisoner(models.Model):
     firstname = models.CharField(max_length=30, default='Not_provided')
@@ -24,11 +29,14 @@ class Prisoner(models.Model):
     phone = models.IntegerField()
     case = models.ForeignKey(Case, on_delete=models.SET_NULL, null=True)
     status = models.CharField(max_length=10, choices=PRISONER_STATUS_CHOICES)
+    date = models.DateField()
+    gender = models.TextField(max_length=10, choices = GENDER_CHOICES)
+    address = models.CharField(max_length=20,null=True )
+    release_date = models.DateField()
     photo = models.ImageField(upload_to='photos/', default='avatar.png')
 
     def __str__(self):
-        return self.firstname + ' ' + self.lastname
-
+        return str(self.firstname + ' ' + self.lastname)
 
 class Visitor(models.Model):
     firstname = models.CharField(max_length=30, default='Not_provided')
@@ -38,7 +46,6 @@ class Visitor(models.Model):
 
     def __str__(self):
         return self.firstname + ' ' + self.lastname
-
 
 RELATIONSHIP_CHOICES = (
     ('1', 'Parent'),
@@ -74,3 +81,34 @@ class Leave(models.Model):
 
     def __str__(self):
         return str(self.pk)
+
+class Transfer(models.Model):
+    prisoner = models.ForeignKey(Prisoner, on_delete=models.CASCADE)
+    date = models.DateField()
+    where_from = models.TextField(max_length=50)
+    where_to = models.TextField(max_length=50)
+    reason = models.TextField()
+
+    def __str__(self):
+        return str(self.prisoner)
+
+COMPLAIN_STATUS_CHOICES = (
+    ("1", "Pending"),
+    ("2", "Replied")
+)
+
+
+class Complain(models.Model):
+    prisoner = models.ForeignKey(Prisoner, on_delete=models.CASCADE)
+    date = models.DateField()
+    summary = models.TextField()
+    replied = models.BooleanField(default=False)
+    status = models.TextField(max_length=10, choices= COMPLAIN_STATUS_CHOICES)
+
+    def __str__(self):
+        return str(self.prisoner)
+
+class Reply(models.Model):
+    complain = models.ForeignKey(Complain, on_delete=models.CASCADE, null=True)
+    summary = models.TextField()
+

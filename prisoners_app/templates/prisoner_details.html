@@ -1,26 +1,69 @@
-
+{% extends 'base1.html' %}
 {% load crispy_forms_tags %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
-</head>
-<body class="container">
-    <h4>{{prisoner}}</h4>
-    <ul>  
-        <li>{{prisoner.firstname}}</li>
-        <li>{{prisoner.lastname}}</li>
-        <li>{{prisoner.email}}</li>
-        <li>{{prisoner.identification}}</li>
-        <li>{{prisoner.phone}}</li>
-        <li>{{prisoner.case}}</li>
-        <li>{{prisoner.status}}</li>
-        <li>{{prisoner.photo}}</li>
-    </ul>
-</body>
-</html>
+{% block content %}
+<div class="module">
+  <div class="module-head">
+    <h3>
+        <span>Prisoner profile</span>
+        <a href="../" class="icon-fullscreen pull-right bordero" style="padding:0 10px;border-radius: 25%;"></a>
+    </h3>
+    <span></span>
+  </div>
+  <div class="module-body">
+    <h5>{{prisoner}}</h5><hr>
+    <div class="btn-row row-fluid">
+      <div class="span7">
+        <div class="btn-row row-fluid">
+          <div class="span4">
+            <p>First Name <i class="pull-right"><i class="pull-right">:</i></i></p>
+            <p>Last Name <i class="pull-right">:</i></p>
+            <p>Email <i class="pull-right">:</i></p>
+            <p>Identification <i class="pull-right">:</i></p>
+            <p>Case <i class="pull-right">:</i></p>
+            <p>Status <i class="pull-right">:</i></p>
+            <p>Gender <i class="pull-right">:</i></p>
+            <p>Address <i class="pull-right">:</i></p>
+            <p>Release date <i class="pull-right">:</i></p>
+          </div>
+          <div class="span8">
+            <p>{{prisoner.firstname}}</p>
+            <p>{{prisoner.lastname}}</p>
+            <p>{{prisoner.email}}</p>
+            <p>{{prisoner.identification}}</p>
+            <p>{{prisoner.case}}</p>
+            <p>{{prisoner.status}}</p>
+            <p>{{prisoner.gender}}</p>
+            <p>{{prisoner.address}}</p>
+            <p>{{prisoner.release_date}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="span4">
+        <div style="text-align: center;">
+          <p>
+            <img src="{{prisoner.photo.url}}" style="width: 55%;">
+          </p>
+          <hr>
+          <div class="btn-row">
+            <div class="span6">
+              <a class="btn btn-primary" href="{% url 'prisoner_update' prisoner.id %}">Edit</a>
+            </div>
+            <div class="span6">
+              <a class="btn btn-danger modal_delete" data-toggle="modal" data-target="#deletemodal" data-url="{% url 'prisoner_delete' prisoner.id %}" >Delete</a>
+            </div>  
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="deletemodal" tabindex="-1" role="dialog" aria-labelledby="deletemodalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm mymodal" role="document">
+        
+    </div>
+</div><!-- /.delete modal -->
+{% endblock %}
+{% block script %}
+<script src="{% static 'scripts/modal_delete.js' %}" type="text/javascript"></script>
+{% endblock %}

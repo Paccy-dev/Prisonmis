@@ -3,7 +3,8 @@ from .models import *
 
 admin.site.register(Case)
 admin.site.register(Prisoner)
-admin.site.register(Visitor)
 admin.site.register(Visit)
 admin.site.register(Leave)
+admin.site.register(Complain)
+admin.site.register(Reply)
 

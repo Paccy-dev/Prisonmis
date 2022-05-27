@@ -1,20 +1,52 @@
-
+{% extends 'base1.html' %}
 {% load crispy_forms_tags %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
-</head>
-<body class="container">
-    <ol>
-    {% for category in categorys %}    
-    <li>{{category}} --<a href="{% url 'category_details' category.id %}">more</a></li>
-    {% endfor %}
-    </ol>
-</body>
-</html>
+{% block content %}
+<div class="module">
+    <div class="module-head">
+        <h3>
+            <span>Categorys Table</span>
+            <a href="{% url 'category_add' %}" class="btn btn-primary pull-right" style="border-radius:50%">Add +</a>
+        </h3>
+    </div>
+    <div class="module-body table">
+        <table cellpadding="0" cellspacing="0" border="0" class="datatable-1 table table-bordered table-striped	 display" width="100%">
+            <thead>
+                <tr>
+                    <th>Order</th>
+                    <th>Category Name</th>
+                    <th>Decription</th>
+                    <th>Created</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for category in categorys %}  
+                <tr>
+                    <td>{{forloop.counter}}</td>
+                    <td><a href="{% url 'category_details' category.id %}">{{category}}</a></td>
+                    <td>{{category.description}}</td>
+                    <td class="center">---some date---</td>
+                    <td class="center">
+                        <a class="btn btn-xs btn-info" href="{% url 'category_update' category.id %}">Edit</a> / 
+                        <a class="btn btn-xs btn-danger modal_delete" data-toggle="modal" data-target="#deletemodal" data-url="{% url 'category_delete' category.id %}" >Delete</a>
+                    </td>                
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div><!--/.categores module-->
+<div class="modal fade" id="deletemodal" tabindex="-1" role="dialog" aria-labelledby="deletemodalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm mymodal" role="document">
+        
+    </div>
+</div><!-- /.delete modal -->
+{% endblock %}
+{% block script %}
+<script src="{% static 'scripts/modal_delete.js' %}" type="text/javascript"></script>
+{% endblock %}

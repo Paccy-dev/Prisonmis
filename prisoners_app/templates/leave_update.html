@@ -1,20 +1,31 @@
-
+{% extends 'base1.html' %}
 {% load crispy_forms_tags %}
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
-</head>
-<body>
-    <form action = "" method="post">
-        {% csrf_token %}
-        {{ l_form|crispy }}
-        <input type="submit">
-    </form>
-</body>
-</html>
+{% block content %}
+<div class="module">  
+    <div class="module-head">
+        <h3>
+            <span>Leave Create Form</span>
+            <a href="../" class="icon-fullscreen pull-right bordero" style="padding:0 10px;border-radius: 25%;"></a>
+        </h3>
+    </div>
+    <div class="module-body"><hr>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row margino" style="margin: 0;">
+                <div class="col col-xs-3 ">{{l_form.prisoner|as_crispy_field}}</div>
+                <div class="col col-xs-3 ">{{l_form.start_date|as_crispy_field}}</div>
+                <div class="col col-xs-3 ">{{l_form.end_date|as_crispy_field}}</div>
+            </div>
+            <div class="row margino" style="margin: 0;">    
+                <div class="col col-xs-4 ">{{l_form.reason|as_crispy_field}}</div>
+                <div class="col col-xs-4 ">
+                    {{l_form.approval|as_crispy_field}}
+                    {{l_form.status|as_crispy_field}}
+                    <hr>
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </div>
+            </div>
+        </form>
+    <div>
+</div>   
+{% endblock %}

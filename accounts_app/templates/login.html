@@ -1,19 +1,30 @@
+{% extends 'base2.html' %}
 {% load crispy_forms_tags %}
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
-</head>
-<body>
-    <form method="POST">
-        {% csrf_token %}
-        {{ l_form|crispy}}
-        <input type="submit">
-    </form>
-</body>
-</html>
+{% block content %}
+<div class="row">
+    <div class="module module-login span4 offset4">
+        <form method="post" class="form-vertical" >
+            {% csrf_token %}
+            <div class="module-head">
+                <h3>Sign In</h3>
+            </div>
+            <div class="module-body">
+                <div class="row" style="margin: 0;">    
+                    <div class="span3">{{l_form.username|as_crispy_field}}</div> 
+                    <div class="span3">{{l_form.password|as_crispy_field}}</div>
+                </div> 
+            </div>
+            <div class="module-foot">
+                <div class="control-group">
+                    <div class="controls clearfix">
+                        <button type="submit" class="btn btn-primary pull-right">Login</button>
+                        <label>
+                            <input type="checkbox"><span>Remember me</span> 
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

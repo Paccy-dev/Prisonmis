@@ -1,0 +1,57 @@
+{% extends 'base1.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+<div class="module">
+    <div class="module-head">
+      <h3>
+          <span>Complain details</span>
+          <a href="../" class="icon-fullscreen pull-right bordero" style="padding:0 10px;border-radius: 25%;"></a>
+      </h3>
+    </div>
+    <div class="module-body">
+      <h5>{{complain}}</h5><hr>
+      <div class="btn-row row-fluid">
+        <div class="span5">
+          <div class="btn-row row-fluid">
+            <div class="span4">
+              <p>Prisoner <i class="pull-right"><i class="pull-right">:</i></i></p>
+              <p>Summary <i class="pull-right">:</i></p>
+              <p>Replied <i class="pull-right">:</i></p>
+              <p>Status  <i class="pull-right">:</i></p>
+              <p>Date <i class="pull-right">:</i></p>
+            </div>
+            <div class="span8">
+              <p>{{complain.prisoner}}</p>
+              <p>{{complain.summary}}</p>
+              <p>{{complain.replied}}</p>
+              <p>{{complain.status}}</p>
+              <p>{{complain.date}}</p>
+            </div>
+            </div>
+        </div>
+        <div class="span3">
+          <div style="text-align: center;">
+            <br><br><br><hr>
+            <div class="btn-row">
+              <div class="span6">
+                <a class="btn btn-primary" href="{% url 'complain_update' complain.id %}">Edit</a>
+              </div>
+              <div class="span6">
+                <a class="btn btn-danger modal_delete" data-toggle="modal" data-target="#deletemodal" data-url="{% url 'complain_delete' complain.id %}" >Delete</a>
+              </div>  
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="deletemodal" tabindex="-1" role="dialog" aria-labelledby="deletemodalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-sm mymodal" role="document">
+          
+      </div>
+  </div><!-- /.delete modal -->
+  {% endblock %}
+  {% block script %}
+  <script src="{% static 'scripts/modal_delete.js' %}" type="text/javascript"></script>
+  {% endblock %}
