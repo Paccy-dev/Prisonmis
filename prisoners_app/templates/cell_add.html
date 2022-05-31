@@ -4,7 +4,7 @@
 <div class="module">  
     <div class="module-head">
         <h3>
-            <span>Case Update Form</span>
+            <span>Cell Add Form</span>
             <a href="../" class="icon-fullscreen pull-right bordero" style="padding:0 10px;border-radius: 25%;"></a>
         </h3>
     </div>
@@ -12,16 +12,12 @@
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="row margino" style="margin: 0;">
-                <div class="col col-xs-6 ">{{c_form.name|as_crispy_field}}</div>
-                <div class="col col-xs-3 ">{{c_form.detention_period|as_crispy_field}}</div>
-            </div>
-            <div class="row margino" style="margin: 0;">
-                <div class="col col-xs-6 ">
-                    {{c_form.description|as_crispy_field}}
-                </div>
                 <div class="col col-xs-3 ">
-                    <br><br><hr>
-                    <button type="submit" class="btn btn-primary">Update</button>
+                    {{c_form.name|as_crispy_field}}
+                    {{c_form.max_inmates|as_crispy_field}}
+                </div>
+                <div class="col col-xs-3 "><br><hr>
+                    <button type="submit" class="btn btn-primary">Create</button>
                 </div>
             </div>
         </form>

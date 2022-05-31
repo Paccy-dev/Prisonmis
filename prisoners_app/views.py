@@ -1,76 +1,83 @@
-from django.shortcuts import render,redirect,get_object_or_404
+from django.shortcuts import render,redirect,get_object_or_404,HttpResponse
 from django.contrib import messages
 from django.contrib.auth import login,logout,authenticate
 from django.contrib.auth.decorators import login_required
 from .forms import *            
+from .models import *            
 
 # Create your views here.
-
+def script(request):
+    transfers = Prisoner.objects.all()
+    for transfer in transfers:
+        transfer.status = 'INMATE'
+        transfer.save()
+    return HttpResponse('Done')    
+    
 @login_required
-def cases_view(request):
-    cases = Case.objects.all()
+def crimes_view(request):
+    crimes = Crime.objects.all()
     if request.method == 'POST':
         name = str(request.POST.get('form'))
         if name == 'delete':
             pk = str(request.POST.get('instance_id'))
-            case = get_object_or_404(Case,id=pk)
-            case.delete()
-            messages.success(request, f'Case {case} - Deletion successful')
+            crime = get_object_or_404(Crime,id=pk)
+            crime.delete()
+            messages.success(request, f'Crime {crime} - Deletion successful')
         else:
             logout(request)
             messages.success(request, f'Logout successful')
             return redirect('login')
-    context = {'cases':cases}
-    return render(request,'cases.html',context)
+    context = {'crimes':crimes}
+    return render(request,'crimes.html',context)
 
 @login_required
-def case_add_view(request):
-    c_form = Case_Form()
+def crime_add_view(request):
+    c_form = Crime_Form()
     if request.method == 'POST':
-        c_form = Case_Form(request.POST)
+        c_form = Crime_Form(request.POST)
         if c_form.is_valid():
             c_form.save()
             name = c_form.cleaned_data.get('name')
-            messages.success(request, f'Case {name} - Creation successful') 
-            return redirect('cases')
+            messages.success(request, f'Crime {name} - Creation successful') 
+            return redirect('Crimes')
     context = {'c_form':c_form}
-    return render(request,'case_add.html',context=context)
+    return render(request,'Crime_add.html',context=context)
 
 @login_required
-def case_details_view(request, pk):
-    case = get_object_or_404(Case,id=pk)
+def crime_details_view(request, pk):
+    crime = get_object_or_404(Crime,id=pk)
     if request.method == 'POST':
         name = str(request.POST.get('form'))
         if name == 'delete':
             pk = str(request.POST.get('instance_id'))
-            case = get_object_or_404(Case,id=pk)
-            case.delete()
-            messages.success(request, f'Case {case} - Deletion successful')
-            return redirect('cases')
+            crime = get_object_or_404(Crime,id=pk)
+            crime.delete()
+            messages.success(request, f'Crime {crime} - Deletion successful')
+            return redirect('crimes')
         else:
             logout(request)
             messages.success(request, f'Logout successful')
             return redirect('login')
-    context = {'case':case}
-    return render(request,'case_details.html',context)
+    context = {'crime':crime}
+    return render(request,'crime_details.html',context)
 
 @login_required
-def case_update_view(request,pk):
-    case = get_object_or_404(Case,id=pk)
-    c_form = Case_Form(instance=case)
+def crime_update_view(request,pk):
+    crime = get_object_or_404(Crime,id=pk)
+    c_form = Crime_Form(instance=crime)
     if request.method == 'POST':
-        c_form = Case_Form(request.POST,instance=case)
+        c_form = Crime_Form(request.POST,instance=crime)
         if c_form.is_valid():
             c_form.save() 
-            messages.success(request, f'Case {case} - Update successful')
-            return redirect('case_details', pk)
+            messages.success(request, f'Crime {crime} - Update successful')
+            return redirect('crime_details', pk)
     context = {'c_form':c_form}
-    return render(request,'case_update.html',context=context)
+    return render(request,'crime_update.html',context=context)
 
 @login_required
-def case_delete_view(request,pk):
-    case = get_object_or_404(Case,id=pk)
-    context = {'instance':case}
+def crime_delete_view(request,pk):
+    crime = get_object_or_404(Crime,id=pk)
+    context = {'instance':crime}
     return render(request,'modal_delete.html',context=context)
 
 @login_required
@@ -127,6 +134,7 @@ def prisoner_update_view(request,pk):
     p_form = Prisoner_Form(instance=prisoner)
     if request.method == 'POST':
         p_form = Prisoner_Form(request.POST,request.FILES,instance=prisoner)
+        print(p_form.errors)
         if p_form.is_valid():
             p_form.save() 
             messages.success(request, f'Prisoner {prisoner} - update successful')
@@ -407,6 +415,76 @@ def complains_view(request):
             return redirect('login')
     context = {'complains':complains}
     return render(request,'complains.html',context)
+
+
+@login_required
+def cell_add_view(request):
+    c_form = Cell_Form()
+    if request.method == 'POST':
+        c_form = Cell_Form(request.POST)
+        print(c_form.errors)
+        if c_form.is_valid():
+            c_form.save() 
+            name = c_form.cleaned_data.get('prisoner')
+            messages.success(request, f'Cell for {name} - creation successful')
+            return redirect('cells')
+    context = {'c_form':c_form}
+    return render(request,'cell_add.html',context=context)
+
+@login_required
+def cell_update_view(request,pk):
+    cell = get_object_or_404(Cell,id=pk)
+    c_form = Cell_Form(instance=cell)
+    if request.method == 'POST':
+        c_form = Cell_Form(request.POST,instance=cell)
+        print(c_form.errors)
+        if c_form.is_valid():
+            c_form.save() 
+            messages.success(request, f'Cell {cell} - update successful')
+            return redirect('cell_details', pk)
+    context = {'c_form':c_form}
+    return render(request,'cell_update.html',context=context)
+
+@login_required
+def cell_delete_view(request,pk):
+    cell = get_object_or_404(Cell,id=pk)
+    context = {'instance':cell}
+    return render(request,'modal_delete.html',context=context)
+
+@login_required
+def cell_details_view(request, pk):
+    cell = get_object_or_404(Cell,id=pk)
+    if request.method == 'POST':
+        name = str(request.POST.get('form'))
+        if name == 'delete':
+            pk = str(request.POST.get('instance_id'))
+            cell = get_object_or_404(Cell,id=pk)
+            cell.delete()
+            messages.success(request, f'Cell {cell} - deletion successful')
+            return redirect('cells')
+        else:
+            logout(request)
+            messages.success(request, f'Logout successful')
+            return redirect('login')
+    context = {'cell':cell}
+    return render(request,'cell_details.html',context)
+
+@login_required
+def cells_view(request):
+    cells = Cell.objects.all()
+    if request.method == 'POST':
+        name = str(request.POST.get('form'))
+        if name == 'delete':
+            pk = str(request.POST.get('instance_id'))
+            cell = get_object_or_404(Cell,id=pk)
+            cell.delete()
+            messages.success(request, f'Cell {cell} - deletion successful')
+        else:
+            logout(request)
+            messages.success(request, f'Logout successful')
+            return redirect('login')
+    context = {'cells':cells}
+    return render(request,'cells.html',context)
 
 
 

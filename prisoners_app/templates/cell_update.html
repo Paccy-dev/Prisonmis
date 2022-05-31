@@ -1,0 +1,26 @@
+{% extends 'base1.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="module">  
+    <div class="module-head">
+        <h3>
+            <span>Crime Update Form</span>
+            <a href="../" class="icon-fullscreen pull-right bordero" style="padding:0 10px;border-radius: 25%;"></a>
+        </h3>
+    </div>
+    <div class="module-body"><hr>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row margino" style="margin: 0;">
+                <div class="col col-xs-3 ">
+                    {{c_form.name|as_crispy_field}}
+                    {{c_form.max_inmates|as_crispy_field}}
+                </div>
+                <div class="col col-xs-3 "><br><hr>
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </div>
+            </div>
+        </form>
+    <div>
+</div>   
+{% endblock %}

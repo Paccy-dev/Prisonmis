@@ -39,7 +39,9 @@ h6 {
 	font-size: 11px
 }
 strong, b {
-	color: #555
+	color: rgb(255, 77, 77);
+	font-weight: lighter;
+	
 }
 a:hover, a:focus {
 	outline: 0
@@ -708,17 +710,16 @@ filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='@topColor', end
 	-webkit-border-radius: 50px;
 	-moz-border-radius: 50px;
 	border-radius: 50px;
-	height: 100px;
-	width: 100px;
-	margin-right: 20px
+	height: 50px;
+	width: 50px;
+	padding: 2px;
 }
 .media .media-avatar img {
-	-webkit-border-radius: 45px;
-	-moz-border-radius: 45px;
-	border-radius: 45px;
-	height: 90px;
-	width: 90px;
-	margin: 5px
+	-webkit-border-radius: 50px;
+	-moz-border-radius: 50px;
+	border-radius: 50px;
+	height: 50px;
+	width: 50px;
 }
 .media .media-avatar.medium {
 	-webkit-border-radius: 35px;
@@ -756,25 +757,28 @@ filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='@topColor', end
 	margin: 15px 0 0
 }
 .media.user {
-	padding: 15px;
+	padding: 3px;
 	-webkit-transition: all .2s ease-in-out;
 	-moz-transition: all .2s ease-in-out;
 	transition: all .2s ease-in-out;
-	 border:1px solid transparent;
+	border: 0.1px dashed rgb(218, 218, 218);
+	border-radius: 10px;
 
 }
 .media.user:hover {
 	background:#E8F6E4;
-	 border:1px solid #E8F6E4;
-	-webkit-border-radius: 3px;
+	border:1px solid #E8F6E4;
+	-webkit-border-radius: 30px;
 	-moz-border-radius: 3px;
-	border-radius: 3px;
-	padding: 14px
+	border-radius: 10px;
 }
 .media.user:hover .media-avatar {
 	background: #fff;
 	border-color: #bbb;
-	
+	border:1px solid #E8F6E4;
+	-webkit-border-radius: 30px;
+	-moz-border-radius: 3px;
+	padding: 4px;
 }
 .progress {
 	-webkit-border-radius: 3px;

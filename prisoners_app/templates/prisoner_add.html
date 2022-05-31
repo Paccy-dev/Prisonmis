@@ -12,23 +12,23 @@
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="row" style="margin: 0;">
-                <div class="col col-xs-5 ">{{p_form.firstname|as_crispy_field}}</div>
-                <div class="col col-xs-5 ">{{p_form.lastname|as_crispy_field}}</div>
+                <div class="col col-xs-4">{{p_form.firstname|as_crispy_field}}</div>
+                <div class="col col-xs-4 ">{{p_form.lastname|as_crispy_field}}</div>
             </div>   
             <div class="row" style="margin: 0;"> 
+                <div class="col col-xs-3 ">{{p_form.identification|as_crispy_field}}</div>
                 <div class="col col-xs-3 ">{{p_form.email|as_crispy_field}}</div>
                 <div class="col col-xs-3 ">{{p_form.phone|as_crispy_field}}</div>
-                <div class="col col-xs-3 ">{{p_form.identification|as_crispy_field}}</div>
             </div>
-            <div class="row" style="margin: 0;">    
-                <div class="col col-xs-3 ">{{p_form.case|as_crispy_field}}</div> 
+            <div class="row" style="margin: 0;">     
                 <div class="col col-xs-3 ">{{p_form.gender|as_crispy_field}}</div>
+                <div class="col col-xs-3 ">{{p_form.marital_status|as_crispy_field}}</div>
                 <div class="col col-xs-3 ">{{p_form.address|as_crispy_field}}</div>
             </div>    
             <div class="row" style="margin: 0;">
-                <div class="col col-xs-2 ">{{p_form.date|as_crispy_field}}</div>
-                <div class="col col-xs-2 ">{{p_form.release_date|as_crispy_field}}</div>
-                <div class="col col-xs-2 ">{{p_form.status|as_crispy_field}}</div>
+                <div class="col col-xs-2 ">{{p_form.entry_date|as_crispy_field}}</div>
+                <div class="col col-xs-2 ">{{p_form.crime|as_crispy_field}}</div>
+                <div class="col col-xs-2 ">{{p_form.cell|as_crispy_field}}</div>
                 <div class="col col-xs-3 ">{{p_form.photo|as_crispy_field}}</div>
             </div>
             <button type="submit" class="btn btn-primary">Create</button>

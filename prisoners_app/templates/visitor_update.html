@@ -14,12 +14,16 @@
             <div class="row" style="margin: 0;"> 
                 <div class="col col-xs-3 ">{{vr_form.firstname|as_crispy_field}}</div>
                 <div class="col col-xs-3 ">{{vr_form.lastname|as_crispy_field}}</div>
+                <div class="col col-xs-3 ">{{vr_form.identification|as_crispy_field}}</div> 
             </div>
             <div class="row" style="margin: 0;">    
-                <div class="col col-xs-3 ">{{vr_form.identification|as_crispy_field}}</div> 
-                <div class="col col-xs-3 ">{{vr_form.phone|as_crispy_field}}</div>
+                <div class="col col-xs-5 ">{{vr_form.reason|as_crispy_field}}</div>
+                <div class="col col-xs-3 ">
+                    {{vr_form.phone|as_crispy_field}}
+                    {{vr_form.date|as_crispy_field}}
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </div>
             </div>    
-            <button type="submit" class="btn btn-primary">Update</button>
         </form>
     </div>
 </div>

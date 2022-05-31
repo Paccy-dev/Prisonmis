@@ -5,7 +5,7 @@
 <div class="module">
     <div class="module-head">
         <h3>
-            <span>Prisoners Table</span>
+            <span>All Prisoners |{{prisoners.count}}</span>
             <a href="{% url 'prisoner_add' %}" class="btn btn-primary pull-right" style="border-radius:50%">Add +</a>
         </h3>
     </div>
@@ -17,7 +17,7 @@
                     <th>Prisoner Firstname</th>
                     <th>Prisoner Last name</th>
                     <th>Identification</th>
-                    <th>Case</th>
+                    <th>crime</th>
                     <th>Status</th>
                     <th>Actions</th>
                 </tr>
@@ -29,7 +29,7 @@
                     <td><a href="{% url 'prisoner_details' prisoner.id %}">{{prisoner.firstname}}</a></td>
                     <td>{{prisoner.lastname}}</td>
                     <td>{{prisoner.identification}}</td>
-                    <td>{{prisoner.case}}</td>
+                    <td>{{prisoner.crime}}</td>
                     <td class="center">{{prisoner.status}}</td>
                     <!-- <td class="center"><a href="{% url 'prisoner_update' prisoner.id %}">Update</a> / <a href="{% url 'prisoner_delete' prisoner.id %}">Delete</a></td> -->
                     <td class="center">

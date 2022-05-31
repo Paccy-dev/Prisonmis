@@ -1,9 +1,10 @@
 from django import forms
+from bootstrap_datepicker_plus.widgets import DatePickerInput,TimePickerInput,DateTimePickerInput,MonthPickerInput,YearPickerInput
 from .models import *
 
-class Case_Form(forms.ModelForm):
+class Crime_Form(forms.ModelForm):
     class Meta:
-        model = Case
+        model = Crime
         fields = "__all__"
 
 class Prisoner_Form(forms.ModelForm):
@@ -16,12 +17,9 @@ class Visitor_Form(forms.ModelForm):
         model = Visitor
         fields = "__all__"
 
-class Visit_Form(forms.ModelForm):
-    class Meta:
-        model = Visit
-        fields = "__all__"
-
-class Leave_Form(forms.ModelForm):
+class Leave_Form(forms.ModelForm): 
+    start_date = forms.DateField(widget=(DatePickerInput(attrs={'placeholder':' yyyy-mm-dd '})))
+    end_date = forms.DateField(widget=(DatePickerInput(attrs={'placeholder':' yyyy-mm-dd '})))
     class Meta:
         model = Leave
         fields = "__all__"
@@ -34,4 +32,9 @@ class Transfer_Form(forms.ModelForm):
 class Complain_Form(forms.ModelForm):
     class Meta:
         model = Complain
+        fields = "__all__"
+
+class Cell_Form(forms.ModelForm):
+    class Meta:
+        model = Cell
         fields = "__all__"

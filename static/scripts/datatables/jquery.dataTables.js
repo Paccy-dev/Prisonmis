@@ -11497,7 +11497,7 @@
 		"fnRecordsTotal": function ()
 		{
 			if ( this.oFeatures.bServerSide ) {
-				return parseInt(this._iRecordsTotal, 10);
+				return parseInt(this._iRecordsTotal, 5);
 			} else {
 				return this.aiDisplayMaster.length;
 			}
@@ -11510,7 +11510,7 @@
 		"fnRecordsDisplay": function ()
 		{
 			if ( this.oFeatures.bServerSide ) {
-				return parseInt(this._iRecordsDisplay, 10);
+				return parseInt(this._iRecordsDisplay, 5);
 			} else {
 				return this.aiDisplay.length;
 			}

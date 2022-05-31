@@ -2,7 +2,7 @@
 {% load crispy_forms_tags %}
 {% load static %}
 {% block content %}
-<div class="module">
+<!-- <div class="module">
     <div class="module-head">
         <h3>
             <span>Users Table</span>
@@ -46,12 +46,69 @@
             </tfoot>
         </table>
     </div>
-</div><!--/.users module-->
+</div> -->
+<!--/.users module-->
 <div class="modal fade" id="deletemodal" tabindex="-1" role="dialog" aria-labelledby="deletemodalLabel" aria-hidden="true">
     <div class="modal-dialog modal-sm mymodal" role="document">
         
     </div>
 </div><!-- /.delete modal -->
+
+<div class="module">
+    <div class="module-head">
+        <h3>
+            All Users |<span>{{users.count}}</span>
+            <a href="{% url 'user_add' %}" class="btn btn-primary pull-right" style="border-radius:50%">Add +</a>
+        </h3>
+    </div>
+    <div class="module-option clearfix">
+        <form>
+        <div class="input-append pull-left">
+            <input type="text" class="span3" placeholder="Filter by name...">
+            <button type="submit" class="btn">
+                <i class="icon-search"></i>
+            </button>
+        </div>
+        </form>
+        <div class="btn-group pull-right" data-toggle="buttons-radio">
+            <button type="button" class="btn">
+                All</button>
+            <button type="button" class="btn">
+                Male</button>
+            <button type="button" class="btn">
+                Female</button>
+        </div>
+    </div>
+    <div class="module-body">
+        <div  style="height: 400px;overflow-y: scroll;overflow-x: hidden;">
+        <div class="row-fluid">
+            {% for user in users %}
+            <div class="col col-xs-5">
+                <div class="media user">
+                    <span style="position:absolute;margin: -7px 0 0 -3px;">{{forloop.counter}}</span>
+                    <a class="media-avatar pull-left" href="{% url 'user_details' user.id %}">
+                        <img src="{{user.photo.url}}">
+                    </a>
+                    <div class="media-body">
+                        <h3 class="media-title">
+                            <a href="{%url 'user_details' user.id %}">{{user.username}}</a>
+                        </h3>
+                        <p>
+                            <small class="muted">{{user.category}}</small>
+                        </p>
+                        <div class="pull-right" style="margin-top:-30px ;">
+                            <a class="btn btn-small btn-primary" href="{% url 'user_update' user.id %}">Edit</a> |
+                        <a class="btn btn-small btn-danger modal_delete" data-toggle="modal" data-target="#deletemodal" data-url="{% url 'user_delete' user.id %}" >Delete</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <!--/.row-fluid-->
+        </div>
+    </div>
+</div>
 {% endblock %}
 {% block script %}
 <script src="{% static 'scripts/modal_delete.js' %}" type="text/javascript"></script>

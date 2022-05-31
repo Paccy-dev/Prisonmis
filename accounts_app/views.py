@@ -50,7 +50,7 @@ def card_view(request):
 def dashboard_view(request):
     users = User.objects.all()
     prisoners = Prisoner.objects.all()
-    cases = Case.objects.all()
+    crimes = Crime.objects.all()
     leaves = Leave.objects.all()
     visitors = Visitor.objects.all()
     transfers = Transfer.objects.all()
@@ -59,7 +59,7 @@ def dashboard_view(request):
     if request.method == 'POST': 
         logout(request)
         return redirect('login')
-    context = {'users':users,'prisoners':prisoners,'cases':cases,'leaves':leaves,'visitors':visitors,'transfers':transfers,'complains':complains,'categories':categories}
+    context = {'users':users,'prisoners':prisoners,'crimes':crimes,'leaves':leaves,'visitors':visitors,'transfers':transfers,'complains':complains,'categories':categories}
     return render(request, 'dashboard.html',context)
     
 @login_required

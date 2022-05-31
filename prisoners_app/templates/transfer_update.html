@@ -11,8 +11,18 @@
     <div class="module-body">
         <form method="post">
             {% csrf_token %}
-            {{ t_form|crispy}}
-            <input type="submit">
+            <div class="row" style="margin: 0;">
+                <div class="col col-xs-4 ">{{t_form.prisoner|as_crispy_field}}</div>
+                <div class="col col-xs-3 ">{{t_form.date|as_crispy_field}}</div>
+            </div>   
+            <div class="row" style="margin: 0;"> 
+                <div class="col col-xs-5 ">{{t_form.reason|as_crispy_field}}</div>
+                <div class="col col-xs-3 ">
+                    {{t_form.where_from|as_crispy_field}}
+                    {{t_form.where_to|as_crispy_field}}
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </div>
+            </div> 
         </form>
     </div>
 </div>

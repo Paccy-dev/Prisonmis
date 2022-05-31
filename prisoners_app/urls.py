@@ -18,11 +18,12 @@ from django.urls import path
 from .views import *
 
 urlpatterns = [
-    path('cases/',cases_view,name='cases'),
-    path('cases/add',case_add_view,name='case_add'),
-    path('cases/<int:pk>/',case_details_view,name='case_details'),
-    path('cases/<int:pk>/update/',case_update_view,name='case_update'),
-    path('cases/<int:pk>/delete/',case_delete_view,name='case_delete'),
+    path('script/',script),
+    path('crimes/',crimes_view,name='crimes'),
+    path('crimes/add',crime_add_view,name='crime_add'),
+    path('crimes/<int:pk>/',crime_details_view,name='crime_details'),
+    path('crimes/<int:pk>/update/',crime_update_view,name='crime_update'),
+    path('crimes/<int:pk>/delete/',crime_delete_view,name='crime_delete'),
     path('leaves/',leaves_view,name='leaves'),
     path('leaves/add/',leave_add_view,name='leave_add'),
     path('leaves/<int:pk>/',leave_details_view,name='leave_details'),
@@ -48,4 +49,9 @@ urlpatterns = [
     path('complains/<int:pk>/',complain_details_view,name='complain_details'),
     path('complains/<int:pk>/update/',complain_update_view,name='complain_update'),
     path('complains/<int:pk>/delete/',complain_delete_view,name='complain_delete'),
+    path('cells/',cells_view,name='cells'),
+    path('cells/add/',cell_add_view,name='cell_add'),
+    path('cells/<int:pk>/',cell_details_view,name='cell_details'),
+    path('cells/<int:pk>/update/',cell_update_view,name='cell_update'),
+    path('cells/<int:pk>/delete/',cell_delete_view,name='cell_delete'),
 ]

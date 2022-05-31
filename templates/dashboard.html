@@ -27,7 +27,7 @@
             <div class="span8">
                 <div class="row-fluid">
                     <div class="span12">
-                        <a href="{% url 'cases' %}" class="btn-box small span4"><i class="icon-suitcase"></i><b class="count">{{cases.count}}</b><p class="text-muted">Case</p></a>
+                        <a href="{% url 'crimes' %}" class="btn-box small span4"><i class="icon-suitcase"></i><b class="count">{{crimes.count}}</b><p class="text-muted">Crimes</p></a>
                         <a href="{% url 'leaves' %}" class="btn-box small span4"><i class="icon-calendar"></i></i><b class="count">{{leaves.count}}</b><p class="text-muted">Leaves</p></a>
                         <a href="{% url 'visitors' %}" class="btn-box small span4"><i class="icon-exchange"></i><b class="count">{{visitors.count}}</b><p class="text-muted">Visitors</p></a>
                     </div>
@@ -42,11 +42,11 @@
             </div>
             <ul class="widget widget-usage unstyled span4">
                 <p></p>
-                <strong class="pull-right">NATIONALITIES</strong>
+                <p class="pull-right">Gender</p>
                 <li>
                     <p></p>
                     <p>
-                        <strong>Rwandans</strong> <span class="pull-right small muted ">78%</span>
+                        Male <span class="pull-right small muted ">78%</span>
                     </p>
                     <div class="progress tight">
                         <div class="bar" data-val=78></div>
@@ -54,26 +54,10 @@
                 </li>
                 <li>
                     <p>
-                        <strong>Burundians</strong> <span class="pull-right small muted">56%</span>
+                        Female <span class="pull-right small muted">56%</span>
                     </p>
                     <div class="progress tight">
                         <div class="bar bar-success" data-val=67></div>
-                    </div>
-                </li>
-                <li>
-                    <p>
-                        <strong>D.R.Cs</strong> <span class="pull-right small muted">44%</span>
-                    </p>
-                    <div class="progress tight">
-                        <div class="bar bar-warning" data-val=44></div>
-                    </div>
-                </li>
-                <li>
-                    <p>
-                        <strong>Ugandans</strong> <span class="pull-right small muted">67%</span>
-                    </p>
-                    <div class="progress tight">
-                        <div class="bar bar-danger" data-val=67></div>
                     </div>
                 </li>
             </ul>
