@@ -5,12 +5,12 @@
 <div class="module">
     <div class="module-head">
       <h3>
-          <span>Complain details</span>
+          <span>complaint details</span>
           <a href="../" class="icon-fullscreen pull-right bordero" style="padding:0 10px;border-radius: 25%;"></a>
       </h3>
     </div>
     <div class="module-body">
-      <h5>{{complain}}</h5><hr>
+      <h5>{{complaint}}</h5><hr>
       <div class="btn-row row-fluid">
         <div class="span5">
           <div class="btn-row row-fluid">
@@ -22,11 +22,11 @@
               <p>Date <i class="pull-right">:</i></p>
             </div>
             <div class="span8">
-              <p>{{complain.prisoner}}</p>
-              <p>{{complain.summary}}</p>
-              <p>{{complain.replied}}</p>
-              <p>{{complain.status}}</p>
-              <p>{{complain.date}}</p>
+              <p>{{complaint.prisoner}}</p>
+              <p>{{complaint.summary}}</p>
+              <p>{{complaint.replied}}</p>
+              <p>{{complaint.status}}</p>
+              <p>{{complaint.date}}</p>
             </div>
             </div>
         </div>
@@ -35,10 +35,10 @@
             <br><br><br><hr>
             <div class="btn-row">
               <div class="span6">
-                <a class="btn btn-primary" href="{% url 'complain_update' complain.id %}">Edit</a>
+                <a class="btn btn-primary" href="{% url 'complaint_update' complaint.id %}">Edit</a>
               </div>
               <div class="span6">
-                <a class="btn btn-danger modal_delete" data-toggle="modal" data-target="#deletemodal" data-url="{% url 'complain_delete' complain.id %}" >Delete</a>
+                <a class="btn btn-danger modal_delete" data-toggle="modal" data-target="#deletemodal" data-url="{% url 'complaint_delete' complaint.id %}" >Delete</a>
               </div>  
             </div>
           </div>

@@ -10,7 +10,7 @@
         {% block title %}
         <title>Prison-mis</title>
         {% endblock %}
-        <!-- <link type="text/css" href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet"> -->
+        <link type="text/css" href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
         <link type="text/css" href="{% static 'bootstrap/css/bootstrap-responsive.min.css' %}" rel="stylesheet">
         <link type="text/css" href="{% static 'css/theme.css' %}" rel="stylesheet">
         <link type="text/css" href="{% static 'css/columns.css' %}" rel="stylesheet">
@@ -50,9 +50,9 @@
                     {% block nav-content %}
                     <div class="nav-collapse collapse navbar-inverse-collapse">
                         <ul class="nav nav-icons">
-                            <li class="active"><a href="#"><i class="icon-envelope"></i></a></li>
+                            <!-- <li class="active"><a href="#"><i class="icon-envelope"></i></a></li>
                             <li><a href="#"><i class="icon-eye-open"></i></a></li>
-                            <li><a href="#"><i class="icon-bar-chart"></i></a></li>
+                            <li><a href="#"><i class="icon-bar-chart"></i></a></li> -->
                         </ul>
 
                         <ul class="nav pull-right">
@@ -61,9 +61,7 @@
                                 <img src="{{ user.photo.url }}" class="nav-avatar" />
                                 <b class="caret"></b></a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="#">Your Profile</a></li>
-                                    <li><a href="#">Edit Profile</a></li>
-                                    <li><a href="#">Account Settings</a></li>
+                                    <li><a href="{% url 'user_update' user.id %}">Edit Profile</a></li>
                                     <li class="divider"></li>
                                     <li><a href="" data-toggle="modal" data-target="#logoutmodal">Logout</a></li>
                                 </ul>
@@ -101,21 +99,28 @@
                                 </a></li>
                             </ul>
                             <!--/.widget-nav-->
+                            {% if user.category.name == 'Prison_Manager' %}
                             <ul class="widget widget-menu unstyled">
                                 <li><a href="{% url 'prisoners' %}"><i class="menu-icon icon-bold"></i> Prisoners </a></li>
-                                <li><a href="{% url 'crimes' %}"><i class="menu-icon icon-book"></i>Crimes </a></li>
-                                <li><a href="{% url 'cells' %}"><i class="menu-icon icon-book"></i>Cells </a></li>
+                                <li><a href="{% url 'cells' %}"><i class="menu-icon icon-table"></i>Cells </a></li>
                             </ul>
+                            {% endif %}
                             <ul class="widget widget-menu unstyled">
-                                <li><a href="{% url 'leaves' %}"><i class="menu-icon icon-paste"></i>Leaves <b class="label orange pull-right">11</b></a></li>
-                                <li><a href="{% url 'transfers' %}"><i class="menu-icon icon-table"></i>Transfers </a></li>
-                                <li><a href="{% url 'complains' %}"><i class="menu-icon icon-bar-chart"></i>Complains <b class="label green pull-right">3</b></a></li>
-                                <li><a href="{% url 'visitors' %}"><i class="menu-icon icon-table"></i>Visitors </a></li>
+                                {% if user.category.name != 'Criminal_Justice_Officer' %}
+                                <li><a href="{% url 'crimes' %}"><i class="menu-icon icon-suitcase"></i>Offenses </a></li>
+                                {% endif %}
+                                <li><a href="{% url 'complaints' %}"><i class="menu-icon icon-book"></i>Complaints </a></li>
+                                {% if user.category.name == 'Prison_Manager' %}
+                                <li><a href="{% url 'transfers' %}"><i class="menu-icon icon-random"></i>Transfers </a></li>
+                                <li><a href="{% url 'releases' %}"><i class="menu-icon icon-bullhorn"></i>Releases <b class="label green pull-right"></b></a></li>
+                                {% endif %}
                             </ul>
                             <!--/.widget-nav-->
                             <ul class="widget widget-menu unstyled">
+                                {% if user.category.name == 'Prison_Manager' %}
                                 <li><a href="{% url 'users' %}"><i class="menu-icon icon-user"></i> Users </a></li>
                                 <li><a href="{% url 'categorys' %}"><i class="menu-icon icon-bullhorn"></i> Categories </a></li>
+                                {% endif %}
                                 <li><a class="collapsed" data-toggle="collapse" href="#togglePages"><i class="menu-icon icon-cog">
                                 </i><i class="icon-chevron-down pull-right"></i><i class="icon-chevron-up pull-right">
                                 </i>More Pages </a>
@@ -148,7 +153,7 @@
         <!--/.wrapper end-->
         <div class="footer">
             <div class="container">
-                <span class="copyright">&copy; 2022 Prison-mis </spam>All rights reserved.
+                <span class="copyright">&copy; 2023 Prison-mis </spam>All rights reserved.
             </div>
         </div>
         <!--/.wrapper end-->

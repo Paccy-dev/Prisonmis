@@ -8,20 +8,16 @@ class Crime_Form(forms.ModelForm):
         fields = "__all__"
 
 class Prisoner_Form(forms.ModelForm):
+    entry_date = forms.DateField(widget=(DatePickerInput(attrs={'placeholder':' yyyy-mm-dd '})))
     class Meta:
         model = Prisoner
         fields = "__all__"
 
-class Visitor_Form(forms.ModelForm):
-    class Meta:
-        model = Visitor
-        fields = "__all__"
 
-class Leave_Form(forms.ModelForm): 
-    start_date = forms.DateField(widget=(DatePickerInput(attrs={'placeholder':' yyyy-mm-dd '})))
-    end_date = forms.DateField(widget=(DatePickerInput(attrs={'placeholder':' yyyy-mm-dd '})))
+class Complaint_Form(forms.ModelForm): 
+    date = forms.DateField(required=False, widget=(DatePickerInput(attrs={'placeholder':' yyyy-mm-dd '})))
     class Meta:
-        model = Leave
+        model = Complaint
         fields = "__all__"
 
 class Transfer_Form(forms.ModelForm):
@@ -29,12 +25,24 @@ class Transfer_Form(forms.ModelForm):
         model = Transfer
         fields = "__all__"
 
-class Complain_Form(forms.ModelForm):
+class Release_Form(forms.ModelForm):
     class Meta:
-        model = Complain
+        model = Release
         fields = "__all__"
 
 class Cell_Form(forms.ModelForm):
     class Meta:
         model = Cell
+        fields = "__all__"
+
+#class Visitor_Form(forms.ModelForm):
+    class Meta:
+        model = Visitor
+        fields = "__all__"
+
+#class Leave_Form(forms.ModelForm): 
+    start_date = forms.DateField(widget=(DatePickerInput(attrs={'placeholder':' yyyy-mm-dd '})))
+    end_date = forms.DateField(widget=(DatePickerInput(attrs={'placeholder':' yyyy-mm-dd '})))
+    class Meta:
+        model = Leave
         fields = "__all__"

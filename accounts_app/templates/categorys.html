@@ -16,7 +16,7 @@
                     <th>Order</th>
                     <th>Category Name</th>
                     <th>Decription</th>
-                    <th>Created</th>
+                    <th># Users</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -26,7 +26,7 @@
                     <td>{{forloop.counter}}</td>
                     <td><a href="{% url 'category_details' category.id %}">{{category}}</a></td>
                     <td>{{category.description}}</td>
-                    <td class="center">---some date---</td>
+                    <td class="center">{{category.user_set.count}}</td>
                     <td class="center">
                         <a class="btn btn-xs btn-info" href="{% url 'category_update' category.id %}">Edit</a> / 
                         <a class="btn btn-xs btn-danger modal_delete" data-toggle="modal" data-target="#deletemodal" data-url="{% url 'category_delete' category.id %}" >Delete</a>

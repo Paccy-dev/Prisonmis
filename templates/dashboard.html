@@ -12,13 +12,23 @@
 {% block content %}
     <div class="btn-controls">
         <div class="btn-box-row row-fluid">
-            <a href="{% url 'prisoners' %}" class="btn-box big span4"><i class=" icon-group"></i><b class="count">{{prisoners.count}}</b>
+            
+            {% if user.category.name == "Prison_Manager"  %}
+            <a href="{% url 'prisoners' %}"class="btn-box big span4">
+            {% else %}
+            <a href="" class="btn-box big span4">
+            {% endif %}
+            <i class=" icon-group"></i><b class="count">{{prisoners.count}}</b>
                 <p class="text-muted">
                     Total prisoners</p>
-            </a><a href="{% url 'users' %}" class="btn-box big span4"><i class="icon-user"></i><b class="count">{{users.count}}</b>
+            </a>
+            {% if user.category.name == "Prison_Manager" %}
+            <a href="{% url 'users' %}" class="btn-box big span4"><i class="icon-user"></i><b class="count">{{users.count}}</b>
                 <p class="text-muted">
                     Total Users</p>
-            </a><a href="#" class="btn-box big span4"><i class="icon-bolt"></i><b class="count">15152</b>
+            </a>
+            {% endif %}
+            <a href="#" class="btn-box big span4"><i class="icon-bolt"></i><b class="count">2023</b>
                 <p class="text-muted">
                     ------</p>
             </a>
@@ -27,21 +37,45 @@
             <div class="span8">
                 <div class="row-fluid">
                     <div class="span12">
-                        <a href="{% url 'crimes' %}" class="btn-box small span4"><i class="icon-suitcase"></i><b class="count">{{crimes.count}}</b><p class="text-muted">Crimes</p></a>
-                        <a href="{% url 'leaves' %}" class="btn-box small span4"><i class="icon-calendar"></i></i><b class="count">{{leaves.count}}</b><p class="text-muted">Leaves</p></a>
-                        <a href="{% url 'visitors' %}" class="btn-box small span4"><i class="icon-exchange"></i><b class="count">{{visitors.count}}</b><p class="text-muted">Visitors</p></a>
+                        <a href="{% url 'crimes' %}" class="btn-box small span4"><i class="icon-suitcase"></i><b class="count">{{crimes.count}}</b><p class="text-muted">Offences</p></a>
+                        <a href="{% url 'complaints' %}" class="btn-box small span4"><i class="icon-book"></i></i><b class="count">{{complaints.count}}</b><p class="text-muted">Complaints</p></a>
+                        {% if user.category.name == "Prison_Manager" %}
+                        <a href="{% url 'cells' %}" class="btn-box small span4"><i class="icon-table"></i><b class="count">{{cells.count}}</b><p class="text-muted">Cells</p></a>
+                        {% else %}
+                        <ul class="widget widget-usage unstyled span4">
+                        <p class="pull-right">Gender</p>
+                        <li>
+                            <p>
+                                Male <span class="pull-right small muted ">78%</span>
+                            </p>
+                            <div class="progress tight">
+                                <div class="bar" data-val=78></div>
+                            </div>
+                        </li>
+                        <li>
+                            <p>
+                                Female <span class="pull-right small muted">56%</span>
+                            </p>
+                            <div class="progress tight">
+                                <div class="bar bar-success" data-val=67></div>
+                            </div>
+                        </li>
+                    </ul> {% endif %}
                     </div>
                 </div>
+                {% if user.category.name == "Prison_Manager" %}
                 <div class="row-fluid">
                     <div class="span12">
                         <a href="{% url 'transfers' %}" class="btn-box small span4"><i class="icon-random"></i><b class="count">{{transfers.count}}</b><p class="text-muted">Transfers</p></a>
-                        <a href="{% url 'complains' %}" class="btn-box small span4"><i class="icon-bullhorn"></i><b class="count">{{complains.count}}</b><p class="text-muted">Complains</p></a>
+                        <a href="{% url 'releases' %}" class="btn-box small span4"><i class="icon-bullhorn"></i><b class="count">{{releases|length}}</b><p class="text-muted">Releases</p></a>
                         <a href="{% url 'categorys' %}" class="btn-box small span4"><i class="icon-sort-down"></i><b class="count">{{categories.count}}</b><p class="text-muted">User categories</p></a>
                     </div>
                 </div>
+                {% endif %}
             </div>
+            {% if user.category.name == "Prison_Manager" %}
             <ul class="widget widget-usage unstyled span4">
-                <p></p>
+                    <p></p>
                 <p class="pull-right">Gender</p>
                 <li>
                     <p></p>
@@ -61,6 +95,7 @@
                     </div>
                 </li>
             </ul>
+            {% endif %}
         </div>
     </div>
     <!--/#btn-controls end-->

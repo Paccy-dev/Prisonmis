@@ -24,7 +24,12 @@
                 <tr>
                     <td>{{forloop.counter}}</td>
                     <td><a href="{% url 'cell_details' cell.id %}">{{cell}}</a></td>
-                    <td>{{cell.status}}</td>
+                    <td>
+                        {{cell.status}} 
+                        <button class="btn btn-xs btn-secondary">
+                        {{cell.prisoner_set.count}} of {{cell.max_inmates}}
+                        </button>
+                    </td>
                     <td class="center">
                         <a class="btn btn-xs btn-info" href="{% url 'cell_update' cell.id %}">Edit</a> / 
                         <a class="btn btn-xs btn-danger modal_delete" data-toggle="modal" data-target="#deletemodal" data-url="{% url 'cell_delete' cell.id %}" >Delete</a>

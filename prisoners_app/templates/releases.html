@@ -5,8 +5,7 @@
 <div class="module">
     <div class="module-head">
         <h3>
-            <span>All Complains |{{complains.count}}</span>
-            <a href="{% url 'complain_add' %}" class="btn btn-primary pull-right" style="border-radius:50%">Add +</a>
+            <span>All Releases |{{prisoners.count}}</span>
         </h3>
     </div>
     <div class="module-body table">
@@ -15,28 +14,31 @@
                 <tr>
                     <th>Order</th>
                     <th>Prisoner</th>
-                    <th>Summary</th>
-                    <th>Replied</th>
-                    <th>Status</th>
-                    <th>Date</th>
+                    <th>Release date</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                {% for complain in complains %}  
+                {% for prisoner in prisoners %}  
                 <tr>
                     <td>{{forloop.counter}}</td>
-                    <td><a href="{% url 'complain_details' complain.id %}">{{complain}}</a></td>
-                    <td>{{complain.summary}}</td>
-                    <td>{{complain.replied}}</td>
-                    <td>{{complain.status}}</td>
-                    <td>{{complain.date}}</td>
+                    <td><a href="{% url 'prisoner_details' prisoner.id %}">{{prisoner}}</a></td>
+                    <td>{{prisoner.release_date}}</td>
                     <td class="center">
-                        <a class="btn btn-xs btn-info" href="{% url 'complain_update' complain.id %}">Edit</a> / 
-                        <a class="btn btn-xs btn-danger modal_delete" data-toggle="modal" data-target="#deletemodal" data-url="{% url 'complain_delete' complain.id %}" >Delete</a>
+                        <a class="btn btn-xs btn-danger modal_delete" data-toggle="modal" data-target="#deletemodal" data-url="{% url 'release_form' prisoner.id %}" >Generate form</a>
                     </td>                
                 </tr>
                 {% endfor %}
+<!--                 {% for release in releases %}  
+                <tr>
+                    <td>{{forloop.counter}}</td>
+                    <td><a href="{% url 'release_details' release.id %}">{{release}}</a></td>
+                    <td>{{release.date}}</td>
+                    <td class="center">
+                        <a class="btn btn-xs btn-danger modal_delete" data-toggle="modal" data-target="#deletemodal" data-url="" >Generate form</a>
+                    </td>                
+                </tr>
+                {% endfor %} -->
             </tbody>
             <tfoot>
                 <tr>
@@ -44,7 +46,7 @@
             </tfoot>
         </table>
     </div>
-</div><!--/.complains module-->
+</div><!--/.releases module-->
 <div class="modal fade" id="deletemodal" tabindex="-1" role="dialog" aria-labelledby="deletemodalLabel" aria-hidden="true">
     <div class="modal-dialog modal-sm mymodal" role="document">
         

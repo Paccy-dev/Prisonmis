@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-bc=axb=jh!xcr9%5$^oqvsv#t*bg$so=(fj9no5khhn+tj@5_i
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'prisonmis.herokuapp.com']
+ALLOWED_HOSTS = ['127.0.0.1','localhost', 'prisonmis.herokuapp.com']
 
 
 # Application definition
@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bootstrap_datepicker_plus',
+    # 'dateutil',
     'crispy_forms',
     'accounts_app',
     'prisoners_app',

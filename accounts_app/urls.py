@@ -29,6 +29,5 @@ urlpatterns = [
     path('users/add/',user_add_view,name='user_add'),
     path('users/<int:pk>/',user_details_view,name='user_details'),
     path('users/<int:pk>/update/',user_update_view,name='user_update'),
-    path('users/<int:pk>/delete/',user_delete_view,name='user_delete'),
-    
+    path('users/<int:pk>/delete/',user_delete_view,name='user_delete'),   
 ]

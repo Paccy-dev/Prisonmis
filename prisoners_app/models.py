@@ -11,7 +11,7 @@ class Crime(models.Model):
 
 CELL_STATUS_CHOICES = (
     ("Empty", "Empty"),
-    ("Visible", "Visible"),
+    ("Contained", "Contained"),
     ("Full", "Full")
 )
 
@@ -29,8 +29,8 @@ PRISONER_STATUS_CHOICES = (
 )
 
 GENDER_CHOICES = (
-    ("1", "Male"),
-    ("2", "Female")
+    ("Male", "Male"),
+    ("Female", "Female")
 )
 
 MARITAL_CHOICES = (
@@ -43,9 +43,9 @@ MARITAL_CHOICES = (
 class Prisoner(models.Model):
     firstname = models.CharField(max_length=30, default='None')
     lastname = models.CharField(max_length=30, default='None')
-    email = models.EmailField(null=True)
+    email = models.EmailField(null=True,blank=True)
     identification = models.IntegerField()
-    phone = models.IntegerField(null=True)
+    phone = models.IntegerField(null=True,blank=True)
     crime = models.ForeignKey(Crime, on_delete=models.SET_NULL,null=True)
     cell = models.ForeignKey(Cell, on_delete=models.SET_NULL,null=True,blank=True)
     entry_date = models.DateField()
@@ -76,7 +76,6 @@ LEAVE_STATUS_CHOICES = (
     ("Active", "Active"),
     ("Expired", "Expired")
 )
-
 
 class Leave(models.Model):
     prisoner = models.ForeignKey(Prisoner, on_delete=models.CASCADE)
@@ -112,23 +111,28 @@ class Transfer(models.Model):
     def __str__(self):
         return str(self.prisoner)
 
-COMPLAIN_STATUS_CHOICES = (
-    ("Pending", "Pending"),
-    ("Replied", "Replied")
-)
 
-
-class Complain(models.Model):
+class Release(models.Model):
     prisoner = models.ForeignKey(Prisoner, on_delete=models.CASCADE)
     date = models.DateField()
-    summary = models.TextField()
-    replied = models.BooleanField(default=False)
-    status = models.TextField(max_length=10, choices= COMPLAIN_STATUS_CHOICES)
 
     def __str__(self):
         return str(self.prisoner)
 
-class Reply(models.Model):
-    complain = models.ForeignKey(Complain, on_delete=models.CASCADE, null=True)
-    summary = models.TextField()
+COMPLAINT_STATUS_CHOICES = (
+    ("Pending", "Pending"),
+    ("Approved", "Approved"),
+    ("Denied", "Denied")
+)
+default_feedback = "Your complaints is still waiting approval"
+class Complaint(models.Model):
+    prisoner = models.ForeignKey(Prisoner, on_delete=models.CASCADE)
+    description = models.TextField()
+    status = models.CharField(max_length=10, choices=COMPLAINT_STATUS_CHOICES,default="Pending",blank=True)
+    feedback = models.TextField(default= default_feedback, blank=True)
+    date = models.DateField(null=True, blank=True)
 
+    def __str__(self):
+        return str(self.prisoner)
+
+    

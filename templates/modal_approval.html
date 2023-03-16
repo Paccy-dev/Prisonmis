@@ -1,0 +1,20 @@
+<form method="post">
+    {% csrf_token %}
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="deletemodalLabel">Approval</h5>
+        </div>
+        <div class="modal-body">
+            <p>
+                Do you want to {{approval}} this Complaint for "{{instance}}" ?
+            </p>
+            <input type="hidden" name="instance_id" value="{{instance.id}}">
+            <input type="hidden" name="form" value="approval">
+            <input type="hidden" name="approval" value={{approval}}>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary">Confirm</button>
+        </div>
+    </div>
+</form>

@@ -2,15 +2,30 @@ from django.shortcuts import render,redirect,get_object_or_404,HttpResponse
 from django.contrib import messages
 from django.contrib.auth import login,logout,authenticate
 from django.contrib.auth.decorators import login_required
+import datetime
+from dateutil.relativedelta import relativedelta
 from .forms import *            
 from .models import *            
 
 # Create your views here.
 def script(request):
-    transfers = Prisoner.objects.all()
-    for transfer in transfers:
-        transfer.status = 'INMATE'
-        transfer.save()
+    # transfers = Cell.objects.all()
+    # for cell in transfers:
+    #     print(cell.name,cell.status)
+    #     print(cell.prisoner_set.count())
+    #     if cell.prisoner_set.count() == 0:
+    #         cell.status = "Empty"
+    #         cell.save()
+    #     elif cell.prisoner_set.count() <= cell.max_inmates:
+    #         cell.status = "Contained"
+    #         cell.save()
+    #     else:
+    #         cell.status = "Full"        
+    #         cell.save()
+    today = datetime.date.today()
+    next_today = today + relativedelta(months=1)
+    # prisoner.release_date = prisoner.entry_date + relativedelta(years=prisoner.crime.detention_period)
+    print(today,next_today)
     return HttpResponse('Done')    
     
 @login_required
@@ -81,6 +96,109 @@ def crime_delete_view(request,pk):
     return render(request,'modal_delete.html',context=context)
 
 @login_required
+def complaints_view(request):
+    complaints = Complaint.objects.all()
+    pending = complaints.filter(status="Pending")
+    approved = complaints.filter(status="Approved")
+    denied = complaints.filter(status="Denied")
+    if request.method == 'POST':
+        name = str(request.POST.get('form'))
+        if name == 'delete':
+            pk = str(request.POST.get('instance_id'))
+            complaint = get_object_or_404(Complaint,id=pk)
+            complaint.delete()
+            messages.success(request,f'Complaint {complaint} - deletion successful')
+        else:
+            logout(request)
+            messages.success(request, f'Logout successful')
+            return redirect('login')
+    context = {'complaints':complaints,'pending':pending,'approved':approved,'denied':denied}
+    return render(request,'complaints.html',context)
+
+@login_required
+def complaint_add_view(request):
+    c_form = Complaint_Form()
+    if request.method == 'POST':
+        c_form = Complaint_Form(request.POST)
+        print(c_form.errors)
+        print('not pasing')
+        if c_form.is_valid():
+            c_form.save() 
+            name = c_form.cleaned_data.get('prisoner')
+            messages.success(request,f'Complaint for {name} - creation successful')
+            return redirect('complaints')
+    context = {'c_form':c_form}
+    return render(request,'complaint_add.html',context=context)
+
+@login_required
+def complaint_details_view(request, pk):
+    complaint = get_object_or_404(Complaint,id=pk)
+    if request.method == 'POST':
+        name = str(request.POST.get('form'))
+        if name == 'delete':
+            pk = str(request.POST.get('instance_id'))
+            complaint = get_object_or_404(Complaint,id=pk)
+            complaint.delete()
+            messages.success(request, f'Complaint {complaint} - deletion successful')
+            return redirect('complaints')
+        elif name == 'approval'   :
+            pk = str(request.POST.get('instance_id'))
+            apr = str(request.POST.get('approval'))
+            complaint = get_object_or_404(Complaint,id=pk)
+            today = datetime.date.today()
+            if apr == "Approve":
+                complaint.status = "Approved"
+                complaint.date = today + relativedelta(months=2)
+                complaint.feedback = f'You complaint has been approved and your court date it {complaint.date}'
+                complaint.save()
+            elif apr == "Deny":
+                complaint.status = "Denied"
+                complaint.date = None
+                complaint.feedback = f'Your complaint has been denied by the Court'
+                complaint.save()
+            else:
+                complaint.status = "Pending"
+                complaint.date = None
+                complaint.feedback = default_feedback
+                complaint.save()
+            messages.success(request, f'Complaint {complaint} was {complaint.status} successful')
+            return redirect('complaints')
+
+        else:
+            logout(request)
+            messages.success(request, f'Logout successful')
+            return redirect('login')
+    context = {'complaint':complaint}
+    return render(request,'complaint_details.html',context)
+
+@login_required
+def complaint_update_view(request,pk):
+    complaint = get_object_or_404(Complaint,id=pk)
+    c_form = Complaint_Form(instance=complaint)
+    if request.method == 'POST':
+        c_form = Complaint_Form(request.POST,instance=complaint)
+        if c_form.is_valid():
+            c_form.save() 
+            messages.success(request, f'Complaint {complaint} - update successful')
+            return redirect('complaint_details', pk)
+    context = {'c_form':c_form,'complaint':complaint}
+    return render(request,'complaint_update.html',context=context)
+
+@login_required
+def complaint_delete_view(request,pk):
+    complaint = get_object_or_404(Complaint,id=pk)
+    context = {'instance':complaint}
+    return render(request,'modal_delete.html',context=context)
+
+@login_required
+def complaint_approval_view(request,pk,apr):
+    complaint = get_object_or_404(Complaint,id=pk)
+    approval = apr
+    print(approval)
+    context = {'instance':complaint,'approval':approval}
+    return render(request,'modal_approval.html',context=context)
+
+@login_required
 def prisoners_view(request):
     prisoners = Prisoner.objects.all()
     if request.method == 'POST':
@@ -104,7 +222,10 @@ def prisoner_add_view(request):
         p_form = Prisoner_Form(request.POST,request.FILES)
         if p_form.is_valid():
             name = p_form.cleaned_data.get('firstname')
-            p_form.save() 
+            prisoner = p_form.save() 
+            prisoner.release_date = prisoner.entry_date + relativedelta(years=prisoner.crime.detention_period)
+            prisoner.save()
+            print(prisoner.entry_date,prisoner.release_date)
             messages.success(request, f'Prisoner {name} creation successful')
             return redirect('prisoners')
     context = {'p_form':p_form}
@@ -129,6 +250,25 @@ def prisoner_details_view(request, pk):
     return render(request,'prisoner_details.html',context)
 
 @login_required
+def prisoner_details_modal_view(request, pk):
+    prisoner = get_object_or_404(Prisoner,id=pk)
+    print("some thing")
+    if request.method == 'POST':
+        name = str(request.POST.get('form'))
+        if name == 'delete':
+            pk = str(request.POST.get('instance_id'))
+            prisoner = get_object_or_404(Prisoner,id=pk)
+            prisoner.delete()
+            messages.success(request, f'Prisoner {prisoner} - Deletion successful')
+            return redirect('prisoners')
+        else:
+            logout(request)
+            messages.success(request, f'Logout successful')
+            return redirect('login')
+    context = {'prisoner':prisoner}
+    return render(request,'prisoner_details_modal.html',context)
+
+@login_required
 def prisoner_update_view(request,pk):
     prisoner = get_object_or_404(Prisoner,id=pk)
     p_form = Prisoner_Form(instance=prisoner)
@@ -136,7 +276,10 @@ def prisoner_update_view(request,pk):
         p_form = Prisoner_Form(request.POST,request.FILES,instance=prisoner)
         print(p_form.errors)
         if p_form.is_valid():
-            p_form.save() 
+            prisoner = p_form.save() 
+            prisoner.release_date = prisoner.entry_date + relativedelta(years=prisoner.crime.detention_period)
+            prisoner.save()
+            print(prisoner.entry_date,prisoner.release_date)
             messages.success(request, f'Prisoner {prisoner} - update successful')
             return redirect('prisoner_details', pk) 
     context = {'p_form':p_form,'prisoner':prisoner}
@@ -147,140 +290,6 @@ def prisoner_delete_view(request,pk):
     prisoner = get_object_or_404(Prisoner,id=pk)
     context = {'instance':prisoner}
     return render(request,'modal_delete.html',context=context)
-
-@login_required
-def visitors_view(request):
-    visitors = Visitor.objects.all()
-    if request.method == 'POST':
-        name = str(request.POST.get('form'))
-        if name == 'delete':
-            pk = str(request.POST.get('instance_id'))
-            visitor = get_object_or_404(Visitor,id=pk)
-            visitor.delete()
-            messages.success(request,f'Visitor {visitor} - deletion successful')
-        else:
-            logout(request)
-            messages.success(request, f'Logout successful')
-            return redirect('login')
-    context = {'visitors':visitors}
-    return render(request,'visitors.html',context)
-
-@login_required
-def visitor_add_view(request):
-    vr_form = Visitor_Form()
-    if request.method == 'POST':
-        vr_form = Visitor_Form(request.POST)
-        if vr_form.is_valid():
-            vr_form.save() 
-            name = vr_form.cleaned_data.get('firstname')
-            messages.success(request,f'Visitor {name} - creation successful')
-            return redirect('visitors')
-    context = {'vr_form':vr_form}
-    return render(request,'visitor_add.html',context=context)
-
-@login_required
-def visitor_details_view(request, pk):
-    visitor = get_object_or_404(Visitor,id=pk)
-    if request.method == 'POST':
-        name = str(request.POST.get('form'))
-        if name == 'delete':
-            pk = str(request.POST.get('instance_id'))
-            visitor = get_object_or_404(Visitor,id=pk)
-            visitor.delete()
-            messages.success(request, f'Visitor {visitor} - deletion successful')
-            return redirect('visitors')
-        else:
-            logout(request)
-            messages.success(request, f'Logout successful')
-            return redirect('login')
-    context = {'visitor':visitor}
-    return render(request,'visitor_details.html',context)
-
-@login_required
-def visitor_update_view(request,pk):
-    visitor = get_object_or_404(Visitor,id=pk)
-    vr_form = Visitor_Form(instance=visitor)
-    if request.method == 'POST':
-        vr_form = Visitor_Form(request.POST,instance=visitor)
-        if vr_form.is_valid():
-            vr_form.save() 
-            messages.success(request, f'Visitor {visitor} - update successful')
-            return redirect('visitor_details', pk)
-    context = {'vr_form':vr_form}
-    return render(request,'visitor_update.html',context=context)
-
-@login_required
-def visitor_delete_view(request,pk):
-    visitor = get_object_or_404(Visitor,id=pk)
-    context = {'instance':visitor}
-    return render(request,'modal_delete.html',context=context)
-
-@login_required
-def leave_add_view(request):
-    l_form = Leave_Form()
-    if request.method == 'POST':
-        l_form = Leave_Form(request.POST)
-        if l_form.is_valid():
-            l_form.save() 
-            name = l_form.cleaned_data.get('prisoner')
-            messages.success(request, f'Leave for prisoner {name} - creation successful')
-            return redirect('leaves')
-    context = {'l_form':l_form}
-    return render(request,'leave_add.html',context=context)
-
-@login_required
-def leave_update_view(request,pk):
-    leave = get_object_or_404(Leave,id=pk)
-    l_form = Leave_Form(instance=leave)
-    if request.method == 'POST':
-        l_form = Leave_Form(request.POST,instance=leave)
-        if l_form.is_valid():
-            l_form.save() 
-            messages.success(request, f'Leave {leave} - update successful')
-            return redirect('leave_details', pk)
-    context = {'l_form':l_form}
-    return render(request,'leave_update.html',context=context)
-
-@login_required
-def leave_delete_view(request,pk):
-    leave = get_object_or_404(Leave,id=pk)
-    context = {'instance':leave}
-    return render(request,'modal_delete.html',context=context)
-
-@login_required
-def leave_details_view(request, pk):
-    leave = get_object_or_404(Leave,id=pk)
-    if request.method == 'POST':
-        name = str(request.POST.get('form'))
-        if name == 'delete':
-            pk = str(request.POST.get('instance_id'))
-            leave = get_object_or_404(Leave,id=pk)
-            messages.success(request, f'Leave for prisoner {leave.prisoner} - deletion successful')
-            leave.delete()
-            return redirect('leaves')
-        else:
-            logout(request)
-            messages.success(request, f'Logout successful')
-            return redirect('login')
-    context = {'leave':leave}
-    return render(request,'leave_details.html',context)
-
-@login_required
-def leaves_view(request):
-    leaves = Leave.objects.all()
-    if request.method == 'POST':
-        name = str(request.POST.get('form'))
-        if name == 'delete':
-            pk = str(request.POST.get('instance_id'))
-            leave = get_object_or_404(Leave,id=pk)
-            messages.success(request, f'Leave for prisoner {leave.prisoner} - deletion successful')
-            leave.delete()
-        else:
-            logout(request)
-            messages.success(request, f'Logout successful')
-            return redirect('login')
-    context = {'leaves':leaves}
-    return render(request,'leaves.html',context)
 
 @login_required
 def transfer_add_view(request):
@@ -351,71 +360,55 @@ def transfers_view(request):
     return render(request,'transfers.html',context)
 
 @login_required
-def complain_add_view(request):
-    c_form = Complain_Form()
-    if request.method == 'POST':
-        c_form = Complain_Form(request.POST)
-        if c_form.is_valid():
-            c_form.save() 
-            name = c_form.cleaned_data.get('prisoner')
-            messages.success(request, f'Complain for {name} - creation successful')
-            return redirect('complains')
-    context = {'c_form':c_form}
-    return render(request,'complain_add.html',context=context)
+def release_form_view(request,pk):
+    prisoner = get_object_or_404(Prisoner,id =pk)
+    context = {'prisoner':prisoner}
+    return render(request,'release_form.html',context=context)
 
 @login_required
-def complain_update_view(request,pk):
-    complain = get_object_or_404(Complain,id=pk)
-    c_form = Complain_Form(instance=complain)
-    if request.method == 'POST':
-        c_form = Complain_Form(request.POST,instance=complain)
-        c_form.save() 
-        messages.success(request, f'Complain {complain} - update successful')
-        return redirect('complain_details', pk)
-    context = {'c_form':c_form}
-    return render(request,'complain_update.html',context=context)
-
-@login_required
-def complain_delete_view(request,pk):
-    complain = get_object_or_404(Complain,id=pk)
-    context = {'instance':complain}
-    return render(request,'modal_delete.html',context=context)
-
-@login_required
-def complain_details_view(request, pk):
-    complain = get_object_or_404(Complain,id=pk)
+def release_details_view(request, pk):
+    release = get_object_or_404(Release,id=pk)
     if request.method == 'POST':
         name = str(request.POST.get('form'))
         if name == 'delete':
             pk = str(request.POST.get('instance_id'))
-            complain = get_object_or_404(Complain,id=pk)
-            complain.delete()
-            messages.success(request, f'Complain {complain} - deletion successful')
-            return redirect('complains')
+            release = get_object_or_404(Release,id=pk)
+            release.delete()
+            messages.success(request, f'Release {release} - deletion successful')
+            return redirect('releases')
         else:
             logout(request)
             messages.success(request, f'Logout successful')
             return redirect('login')
-    context = {'complain':complain}
-    return render(request,'complain_details.html',context)
+    context = {'release':release}
+    return render(request,'release_details.html',context)
 
 @login_required
-def complains_view(request):
-    complains = Complain.objects.all()
+def releases_view(request):
+    releases = Release.objects.all()
+    all_prisoners = Prisoner.objects.all()
+    today = datetime.date.today()
+    today_yr = today.year
+    print(today_yr)
+    prisoners = []
+    for prisoner in all_prisoners:
+        if prisoner.release_date is not None:
+            year = prisoner.release_date.year
+            if year == today_yr:
+                prisoners.append(prisoner)    
     if request.method == 'POST':
         name = str(request.POST.get('form'))
         if name == 'delete':
             pk = str(request.POST.get('instance_id'))
-            complain = get_object_or_404(Complain,id=pk)
-            complain.delete()
-            messages.success(request, f'Complain {complain} - deletion successful')
+            release = get_object_or_404(Release,id=pk)
+            release.delete()
+            messages.success(request, f'Release {release} - deletion successful')
         else:
             logout(request)
             messages.success(request, f'Logout successful')
             return redirect('login')
-    context = {'complains':complains}
-    return render(request,'complains.html',context)
-
+    context = {'releases':releases,'prisoners':prisoners}
+    return render(request,'releases.html',context)
 
 @login_required
 def cell_add_view(request):
@@ -486,5 +479,139 @@ def cells_view(request):
     context = {'cells':cells}
     return render(request,'cells.html',context)
 
+
+# @login_required
+# def visitors_view(request):
+#     visitors = Visitor.objects.all()
+#     if request.method == 'POST':
+#         name = str(request.POST.get('form'))
+#         if name == 'delete':
+#             pk = str(request.POST.get('instance_id'))
+#             visitor = get_object_or_404(Visitor,id=pk)
+#             visitor.delete()
+#             messages.success(request,f'Visitor {visitor} - deletion successful')
+#         else:
+#             logout(request)
+#             messages.success(request, f'Logout successful')
+#             return redirect('login')
+#     context = {'visitors':visitors}
+#     return render(request,'visitors.html',context)
+
+# @login_required
+# def visitor_add_view(request):
+#     vr_form = Visitor_Form()
+#     if request.method == 'POST':
+#         vr_form = Visitor_Form(request.POST)
+#         if vr_form.is_valid():
+#             vr_form.save() 
+#             name = vr_form.cleaned_data.get('firstname')
+#             messages.success(request,f'Visitor {name} - creation successful')
+#             return redirect('visitors')
+#     context = {'vr_form':vr_form}
+#     return render(request,'visitor_add.html',context=context)
+
+# @login_required
+# def visitor_details_view(request, pk):
+#     visitor = get_object_or_404(Visitor,id=pk)
+#     if request.method == 'POST':
+#         name = str(request.POST.get('form'))
+#         if name == 'delete':
+#             pk = str(request.POST.get('instance_id'))
+#             visitor = get_object_or_404(Visitor,id=pk)
+#             visitor.delete()
+#             messages.success(request, f'Visitor {visitor} - deletion successful')
+#             return redirect('visitors')
+#         else:
+#             logout(request)
+#             messages.success(request, f'Logout successful')
+#             return redirect('login')
+#     context = {'visitor':visitor}
+#     return render(request,'visitor_details.html',context)
+
+# @login_required
+# def visitor_update_view(request,pk):
+#     visitor = get_object_or_404(Visitor,id=pk)
+#     vr_form = Visitor_Form(instance=visitor)
+#     if request.method == 'POST':
+#         vr_form = Visitor_Form(request.POST,instance=visitor)
+#         if vr_form.is_valid():
+#             vr_form.save() 
+#             messages.success(request, f'Visitor {visitor} - update successful')
+#             return redirect('visitor_details', pk)
+#     context = {'vr_form':vr_form}
+#     return render(request,'visitor_update.html',context=context)
+
+# @login_required
+# def visitor_delete_view(request,pk):
+#     visitor = get_object_or_404(Visitor,id=pk)
+#     context = {'instance':visitor}
+#     return render(request,'modal_delete.html',context=context)
+
+# @login_required
+# def leave_add_view(request):
+#     l_form = Leave_Form()
+#     if request.method == 'POST':
+#         l_form = Leave_Form(request.POST)
+#         if l_form.is_valid():
+#             l_form.save() 
+#             name = l_form.cleaned_data.get('prisoner')
+#             messages.success(request, f'Leave for prisoner {name} - creation successful')
+#             return redirect('leaves')
+#     context = {'l_form':l_form}
+#     return render(request,'leave_add.html',context=context)
+
+# @login_required
+# def leave_update_view(request,pk):
+#     leave = get_object_or_404(Leave,id=pk)
+#     l_form = Leave_Form(instance=leave)
+#     if request.method == 'POST':
+#         l_form = Leave_Form(request.POST,instance=leave)
+#         if l_form.is_valid():
+#             l_form.save() 
+#             messages.success(request, f'Leave {leave} - update successful')
+#             return redirect('leave_details', pk)
+#     context = {'l_form':l_form}
+#     return render(request,'leave_update.html',context=context)
+
+# @login_required
+# def leave_delete_view(request,pk):
+#     leave = get_object_or_404(Leave,id=pk)
+#     context = {'instance':leave}
+#     return render(request,'modal_delete.html',context=context)
+
+# @login_required
+# def leave_details_view(request, pk):
+#     leave = get_object_or_404(Leave,id=pk)
+#     if request.method == 'POST':
+#         name = str(request.POST.get('form'))
+#         if name == 'delete':
+#             pk = str(request.POST.get('instance_id'))
+#             leave = get_object_or_404(Leave,id=pk)
+#             messages.success(request, f'Leave for prisoner {leave.prisoner} - deletion successful')
+#             leave.delete()
+#             return redirect('leaves')
+#         else:
+#             logout(request)
+#             messages.success(request, f'Logout successful')
+#             return redirect('login')
+#     context = {'leave':leave}
+#     return render(request,'leave_details.html',context)
+
+# @login_required
+# def leaves_view(request):
+#     leaves = Leave.objects.all()
+#     if request.method == 'POST':
+#         name = str(request.POST.get('form'))
+#         if name == 'delete':
+#             pk = str(request.POST.get('instance_id'))
+#             leave = get_object_or_404(Leave,id=pk)
+#             messages.success(request, f'Leave for prisoner {leave.prisoner} - deletion successful')
+#             leave.delete()
+#         else:
+#             logout(request)
+#             messages.success(request, f'Logout successful')
+#             return redirect('login')
+#     context = {'leaves':leaves}
+#     return render(request,'leaves.html',context)
 
 

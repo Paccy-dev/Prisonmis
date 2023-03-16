@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.auth import login,logout,authenticate
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
+import datetime
 from .forms import *
 from .models import *
 from prisoners_app.models import *
@@ -51,15 +52,24 @@ def dashboard_view(request):
     users = User.objects.all()
     prisoners = Prisoner.objects.all()
     crimes = Crime.objects.all()
-    leaves = Leave.objects.all()
-    visitors = Visitor.objects.all()
+    complaints = Complaint.objects.all()
+    cells = Cell.objects.all()
     transfers = Transfer.objects.all()
-    complains = Complain.objects.all()
+    releases = Release.objects.all()
     categories = Category.objects.all()
     if request.method == 'POST': 
         logout(request)
         return redirect('login')
-    context = {'users':users,'prisoners':prisoners,'crimes':crimes,'leaves':leaves,'visitors':visitors,'transfers':transfers,'complains':complains,'categories':categories}
+    all_prisoners = Prisoner.objects.all()
+    today = datetime.date.today()
+    today_yr = today.year
+    releases = []
+    for prisoner in all_prisoners:
+        if prisoner.release_date is not None:
+            year = prisoner.release_date.year
+            if year == today_yr:
+                releases.append(prisoner)  
+    context = {'users':users,'prisoners':prisoners,'crimes':crimes,'complaints':complaints,'cells':cells,'transfers':transfers,'releases':releases,'categories':categories}
     return render(request, 'dashboard.html',context)
     
 @login_required

@@ -12,6 +12,7 @@ pillow = "*"
 django = "*"
 django-crispy-forms = "*"
 django-bootstrap-datepicker-plus = "*"
+python-dateutil = "*"
 
 [dev-packages]
 
