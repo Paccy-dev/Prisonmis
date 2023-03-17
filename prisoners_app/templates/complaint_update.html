@@ -1,5 +1,6 @@
 {% extends 'base1.html' %}
 {% load crispy_forms_tags %}
+{% load static %}
 {% block content %}
 <div class="module">  
     <div class="module-head">
@@ -10,6 +11,7 @@
     </div>
     <div class="module-body"><hr>
         <form method="post" enctype="multipart/form-data">
+            {{c_form.media}}
             {% csrf_token %}
             <div class="row margino" style="margin: 0;">
                 <div class="col col-xs-3 ">{{c_form.prisoner|as_crispy_field}}</div><br>

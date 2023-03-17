@@ -39,7 +39,6 @@ MARITAL_CHOICES = (
     ("Divorced", "Divorced")
 )
 
-
 class Prisoner(models.Model):
     firstname = models.CharField(max_length=30, default='None')
     lastname = models.CharField(max_length=30, default='None')
@@ -89,7 +88,8 @@ class Leave(models.Model):
         return str(self.pk)
 
 WHERE_FROM_CHOICES = (
-    ("1", "Karubanda Prison"),
+    ("Karubanda Prison", "Karubanda Prison"),
+    ("Congo Nile", "Congo Nile"),
 )
 WHERE_TO_CHOICES = (
     ("Mageregere", "Mageregere"),

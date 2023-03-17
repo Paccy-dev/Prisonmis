@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bootstrap_datepicker_plus',
     # 'dateutil',
+    'crispy_bootstrap4',
     'crispy_forms',
     'accounts_app',
     'prisoners_app',

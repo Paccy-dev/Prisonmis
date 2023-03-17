@@ -1,7 +1,12 @@
-from django.shortcuts import render,redirect,get_object_or_404,HttpResponse
+from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import login,logout,authenticate
 from django.contrib.auth.decorators import login_required
+
+from django.template.loader import get_template
+from django.http import HttpResponse
+from django.contrib.staticfiles import finders
+from xhtml2pdf import pisa
 import datetime
 from dateutil.relativedelta import relativedelta
 from .forms import *            
@@ -316,6 +321,7 @@ def transfer_update_view(request,pk):
             messages.success(request,f'Transfer for prisoner {name} - update successful')
             return redirect('transfer_details', pk)
     context = {'t_form':t_form}
+    print("'*****************************")
     return render(request,'transfer_update.html',context=context)
 
 @login_required
@@ -413,6 +419,7 @@ def releases_view(request):
 @login_required
 def cell_add_view(request):
     c_form = Cell_Form()
+    print('passed')
     if request.method == 'POST':
         c_form = Cell_Form(request.POST)
         print(c_form.errors)
@@ -479,139 +486,45 @@ def cells_view(request):
     context = {'cells':cells}
     return render(request,'cells.html',context)
 
+def report_view(request):
+    r_form =  Report_Form()
+    context = {'r_form':r_form}
+    return render(request, 'reports.html', context)
 
-# @login_required
-# def visitors_view(request):
-#     visitors = Visitor.objects.all()
-#     if request.method == 'POST':
-#         name = str(request.POST.get('form'))
-#         if name == 'delete':
-#             pk = str(request.POST.get('instance_id'))
-#             visitor = get_object_or_404(Visitor,id=pk)
-#             visitor.delete()
-#             messages.success(request,f'Visitor {visitor} - deletion successful')
-#         else:
-#             logout(request)
-#             messages.success(request, f'Logout successful')
-#             return redirect('login')
-#     context = {'visitors':visitors}
-#     return render(request,'visitors.html',context)
+def report_generate_view(request):
+    template_path = 'report_generate.html'
+    context = {'prisoners': Prisoner.objects.all()}
+    # Create a Django response object, and specify content_type as pdf
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'filename="report.pdf"'
+    # find the template and render it.
+    template = get_template(template_path)
+    html = template.render(context)
 
-# @login_required
-# def visitor_add_view(request):
-#     vr_form = Visitor_Form()
-#     if request.method == 'POST':
-#         vr_form = Visitor_Form(request.POST)
-#         if vr_form.is_valid():
-#             vr_form.save() 
-#             name = vr_form.cleaned_data.get('firstname')
-#             messages.success(request,f'Visitor {name} - creation successful')
-#             return redirect('visitors')
-#     context = {'vr_form':vr_form}
-#     return render(request,'visitor_add.html',context=context)
+    # create a pdf
+    pisa_status = pisa.CreatePDF(
+    html, dest=response)
+    # if error then show some funny view
+    #if pisa_status.errors:
+    #   return HttpResponse('We had some errors <pre>' + html + '</pre>')
+    return response
+    #return render(request, 'report_cells.html',context)
 
-# @login_required
-# def visitor_details_view(request, pk):
-#     visitor = get_object_or_404(Visitor,id=pk)
-#     if request.method == 'POST':
-#         name = str(request.POST.get('form'))
-#         if name == 'delete':
-#             pk = str(request.POST.get('instance_id'))
-#             visitor = get_object_or_404(Visitor,id=pk)
-#             visitor.delete()
-#             messages.success(request, f'Visitor {visitor} - deletion successful')
-#             return redirect('visitors')
-#         else:
-#             logout(request)
-#             messages.success(request, f'Logout successful')
-#             return redirect('login')
-#     context = {'visitor':visitor}
-#     return render(request,'visitor_details.html',context)
+def render_pdf_view(request):
+    template_path = 'report_cells.html'
+    context = {'cells': Cell.objects.all()}
+    # Create a Django response object, and specify content_type as pdf
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'filename="report_cells.pdf"'
+    # find the template and render it.
+    template = get_template(template_path)
+    html = template.render(context)
 
-# @login_required
-# def visitor_update_view(request,pk):
-#     visitor = get_object_or_404(Visitor,id=pk)
-#     vr_form = Visitor_Form(instance=visitor)
-#     if request.method == 'POST':
-#         vr_form = Visitor_Form(request.POST,instance=visitor)
-#         if vr_form.is_valid():
-#             vr_form.save() 
-#             messages.success(request, f'Visitor {visitor} - update successful')
-#             return redirect('visitor_details', pk)
-#     context = {'vr_form':vr_form}
-#     return render(request,'visitor_update.html',context=context)
-
-# @login_required
-# def visitor_delete_view(request,pk):
-#     visitor = get_object_or_404(Visitor,id=pk)
-#     context = {'instance':visitor}
-#     return render(request,'modal_delete.html',context=context)
-
-# @login_required
-# def leave_add_view(request):
-#     l_form = Leave_Form()
-#     if request.method == 'POST':
-#         l_form = Leave_Form(request.POST)
-#         if l_form.is_valid():
-#             l_form.save() 
-#             name = l_form.cleaned_data.get('prisoner')
-#             messages.success(request, f'Leave for prisoner {name} - creation successful')
-#             return redirect('leaves')
-#     context = {'l_form':l_form}
-#     return render(request,'leave_add.html',context=context)
-
-# @login_required
-# def leave_update_view(request,pk):
-#     leave = get_object_or_404(Leave,id=pk)
-#     l_form = Leave_Form(instance=leave)
-#     if request.method == 'POST':
-#         l_form = Leave_Form(request.POST,instance=leave)
-#         if l_form.is_valid():
-#             l_form.save() 
-#             messages.success(request, f'Leave {leave} - update successful')
-#             return redirect('leave_details', pk)
-#     context = {'l_form':l_form}
-#     return render(request,'leave_update.html',context=context)
-
-# @login_required
-# def leave_delete_view(request,pk):
-#     leave = get_object_or_404(Leave,id=pk)
-#     context = {'instance':leave}
-#     return render(request,'modal_delete.html',context=context)
-
-# @login_required
-# def leave_details_view(request, pk):
-#     leave = get_object_or_404(Leave,id=pk)
-#     if request.method == 'POST':
-#         name = str(request.POST.get('form'))
-#         if name == 'delete':
-#             pk = str(request.POST.get('instance_id'))
-#             leave = get_object_or_404(Leave,id=pk)
-#             messages.success(request, f'Leave for prisoner {leave.prisoner} - deletion successful')
-#             leave.delete()
-#             return redirect('leaves')
-#         else:
-#             logout(request)
-#             messages.success(request, f'Logout successful')
-#             return redirect('login')
-#     context = {'leave':leave}
-#     return render(request,'leave_details.html',context)
-
-# @login_required
-# def leaves_view(request):
-#     leaves = Leave.objects.all()
-#     if request.method == 'POST':
-#         name = str(request.POST.get('form'))
-#         if name == 'delete':
-#             pk = str(request.POST.get('instance_id'))
-#             leave = get_object_or_404(Leave,id=pk)
-#             messages.success(request, f'Leave for prisoner {leave.prisoner} - deletion successful')
-#             leave.delete()
-#         else:
-#             logout(request)
-#             messages.success(request, f'Logout successful')
-#             return redirect('login')
-#     context = {'leaves':leaves}
-#     return render(request,'leaves.html',context)
-
-
+    # create a pdf
+    pisa_status = pisa.CreatePDF(
+    html, dest=response)
+    # if error then show some funny view
+    #if pisa_status.errors:
+    #   return HttpResponse('We had some errors <pre>' + html + '</pre>')
+    return response
+    #return render(request, 'report_cells.html',context)

@@ -10,6 +10,7 @@
     </div>
     <div class="module-body"><hr>
         <form method="post" enctype="multipart/form-data">
+            {{ p_form.media }}
             {% csrf_token %}
             <div class="row" style="margin: 0;">
                 <div class="col col-xs-4">{{p_form.firstname|as_crispy_field}}</div>

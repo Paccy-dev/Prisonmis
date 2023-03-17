@@ -13,6 +13,7 @@ django = "*"
 django-crispy-forms = "*"
 django-bootstrap-datepicker-plus = "*"
 python-dateutil = "*"
+xhtml2pdf = "*"
 
 [dev-packages]
 

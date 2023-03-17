@@ -48,6 +48,10 @@ urlpatterns = [
     path('cells/<int:pk>/',cell_details_view,name='cell_details'),
     path('cells/<int:pk>/update/',cell_update_view,name='cell_update'),
     path('cells/<int:pk>/delete/',cell_delete_view,name='cell_delete'),
+    path('cells/report/',render_pdf_view,name='report_cells'),
+    path('reports/',report_view,name='reports'),
+    path('reports/generate',report_generate_view,name='report_generate'),
+
     # path('visitors/',visitors_view,name='visitors'),
     # path('visitors/add/',visitor_add_view,name='visitor_add'),
     # path('visitors/<int:pk>/',visitor_details_view,name='visitor_details'),
