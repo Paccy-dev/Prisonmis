@@ -73,7 +73,29 @@ class Complaint_Update_Form(forms.ModelForm):
         fields = "__all__"
 
 
-class Transfer_Form(forms.ModelForm):
+class Transfer_Add_Form(forms.ModelForm):
+    date = forms.DateField(required=False, widget=(DatePickerInput(attrs={'placeholder':' yyyy-mm-dd '})))
+    class Meta:
+        model = Transfer
+        fields = "__all__"
+
+    def clean(self):
+        # data from the form is fetched using super function
+        super(Transfer_Add_Form, self).clean()
+        prisoner = self.cleaned_data.get('prisoner')
+        prisoners_with_transfers = []
+        for transfer in Transfer.objects.all():
+            prisoners_with_transfers.append(transfer.prisoner)
+        print(len(prisoners_with_transfers))
+        if prisoner in prisoners_with_transfers:
+            print("Has complaint")
+            self._errors['prisoner'] = self.error_class(['The selected prisoner has a pending Transfer'])
+        else:
+            print("Has No complaint")
+        # return any errors if found
+        return self.cleaned_data
+
+class Transfer_Update_Form(forms.ModelForm):
     date = forms.DateField(required=False, widget=(DatePickerInput(attrs={'placeholder':' yyyy-mm-dd '})))
     class Meta:
         model = Transfer

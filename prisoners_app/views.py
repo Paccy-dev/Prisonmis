@@ -303,9 +303,9 @@ def prisoner_delete_view(request,pk):
 
 @login_required
 def transfer_add_view(request):
-    t_form = Transfer_Form()
+    t_form = Transfer_Add_Form()
     if request.method == 'POST':
-        t_form = Transfer_Form(request.POST)
+        t_form = Transfer_Add_Form(request.POST)
         if t_form.is_valid():
             t_form.save() 
             name = t_form.cleaned_data.get('prisoner')
@@ -317,9 +317,9 @@ def transfer_add_view(request):
 @login_required
 def transfer_update_view(request,pk):
     transfer = get_object_or_404(Transfer,id=pk)
-    t_form = Transfer_Form(instance=transfer)
+    t_form = Transfer_Update_Form(instance=transfer)
     if request.method == 'POST':
-        t_form = Transfer_Form(request.POST,instance=transfer)
+        t_form = Transfer_Update_Form(request.POST,instance=transfer)
         if t_form.is_valid():
             t_form.save() 
             name = t_form.cleaned_data.get('prisoner')

@@ -189,11 +189,17 @@ def user_update_view(request,pk):
     user = get_object_or_404(User,id=pk)
     p_form = Profile_Form(instance=user)
     if request.method == 'POST':
-        p_form = Profile_Form(request.POST,request.FILES,instance=user)
-        if p_form.is_valid():
-            p_form.save()
-            messages.success(request, f'User {user} - update successful')
-            return redirect('user_details', pk)
+        name = str(request.POST.get('form'))
+        if name == 'update':
+            p_form = Profile_Form(request.POST,request.FILES,instance=user)
+            if p_form.is_valid():
+                p_form.save()
+                messages.success(request, f'User {user} - update successful')
+                return redirect('user_details', pk)
+        else:
+            logout(request)
+            messages.success(request, f'Logout successful')
+            return redirect('login')
     context = {'p_form':p_form}
     return render(request,'user_update.html',context)
 
