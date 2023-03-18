@@ -1,0 +1,28 @@
+<table cellpadding="0" cellspacing="0" border="0"width="100%">
+    <thead>
+        <tr>
+            <th class="left">Order</th>
+            <th class="left">Prisoner</th>
+            <th class="left">Description</th>
+            <th class="left">Status</th>
+            <th class="left">Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% if instances.is_empty %}
+        <tr><td><b>No records</b></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        {% else %}
+        {% for instance in instances %}  
+        <tr>
+            <td>{{forloop.counter}}</td>
+            <td>{{instance.prisoner}}</td>
+            <td>{{instance.description|slice:"50"}}...</td>
+            <td>{{instance.status}}</td>
+            <td>{{instance.date}}</td>
+        </tr>
+        {% endfor %}
+        {% endif %}
+    </tbody>
+    <tfoot>
+    </tfoot>
+</table>

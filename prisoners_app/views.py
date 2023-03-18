@@ -1,12 +1,7 @@
-from django.shortcuts import render,redirect,get_object_or_404
+from django.shortcuts import render,redirect,get_object_or_404,HttpResponse
 from django.contrib import messages
 from django.contrib.auth import login,logout,authenticate
 from django.contrib.auth.decorators import login_required
-
-from django.template.loader import get_template
-from django.http import HttpResponse
-from django.contrib.staticfiles import finders
-from xhtml2pdf import pisa
 import datetime
 from dateutil.relativedelta import relativedelta
 from .forms import *            
@@ -122,16 +117,20 @@ def complaints_view(request):
 
 @login_required
 def complaint_add_view(request):
-    c_form = Complaint_Form()
+    c_form = Complaint_Add_Form()
     if request.method == 'POST':
-        c_form = Complaint_Form(request.POST)
-        print(c_form.errors)
-        print('not pasing')
-        if c_form.is_valid():
-            c_form.save() 
-            name = c_form.cleaned_data.get('prisoner')
-            messages.success(request,f'Complaint for {name} - creation successful')
-            return redirect('complaints')
+        name = str(request.POST.get('form'))
+        if name == 'add':
+            c_form = Complaint_Add_Form(request.POST)
+            if c_form.is_valid():
+                c_form.save() 
+                name = c_form.cleaned_data.get('prisoner')
+                messages.success(request,f'Complaint for {name} - creation successful')
+                return redirect('complaints')
+        else:
+            logout(request)
+            messages.success(request, f'Logout successful')
+            return redirect('login')
     context = {'c_form':c_form}
     return render(request,'complaint_add.html',context=context)
 
@@ -179,9 +178,9 @@ def complaint_details_view(request, pk):
 @login_required
 def complaint_update_view(request,pk):
     complaint = get_object_or_404(Complaint,id=pk)
-    c_form = Complaint_Form(instance=complaint)
+    c_form = Complaint_Update_Form(instance=complaint)
     if request.method == 'POST':
-        c_form = Complaint_Form(request.POST,instance=complaint)
+        c_form = Complaint_Update_Form(request.POST,instance=complaint)
         if c_form.is_valid():
             c_form.save() 
             messages.success(request, f'Complaint {complaint} - update successful')
@@ -222,17 +221,23 @@ def prisoners_view(request):
 
 @login_required
 def prisoner_add_view(request):
-    p_form = Prisoner_Form()
+    p_form = Prisoner_Add_Form()
     if request.method == 'POST':
-        p_form = Prisoner_Form(request.POST,request.FILES)
-        if p_form.is_valid():
-            name = p_form.cleaned_data.get('firstname')
-            prisoner = p_form.save() 
-            prisoner.release_date = prisoner.entry_date + relativedelta(years=prisoner.crime.detention_period)
-            prisoner.save()
-            print(prisoner.entry_date,prisoner.release_date)
-            messages.success(request, f'Prisoner {name} creation successful')
-            return redirect('prisoners')
+        name = str(request.POST.get('form'))
+        if name == 'add':
+            p_form = Prisoner_Add_Form(request.POST,request.FILES)
+            if p_form.is_valid():
+                name = p_form.cleaned_data.get('firstname')
+                prisoner = p_form.save() 
+                prisoner.release_date = prisoner.entry_date + relativedelta(years=prisoner.crime.detention_period)
+                prisoner.save()
+                print(prisoner.entry_date,prisoner.release_date)
+                messages.success(request, f'Prisoner {name} creation successful')
+                return redirect('prisoners')
+        else:
+            logout(request)
+            messages.success(request, f'Logout successful')
+            return redirect('login')
     context = {'p_form':p_form}
     return render(request,'prisoner_add.html',context=context)
 
@@ -276,9 +281,9 @@ def prisoner_details_modal_view(request, pk):
 @login_required
 def prisoner_update_view(request,pk):
     prisoner = get_object_or_404(Prisoner,id=pk)
-    p_form = Prisoner_Form(instance=prisoner)
+    p_form = Prisoner_Update_Form(instance=prisoner)
     if request.method == 'POST':
-        p_form = Prisoner_Form(request.POST,request.FILES,instance=prisoner)
+        p_form = Prisoner_Update_Form(request.POST,request.FILES,instance=prisoner)
         print(p_form.errors)
         if p_form.is_valid():
             prisoner = p_form.save() 
@@ -485,30 +490,6 @@ def cells_view(request):
             return redirect('login')
     context = {'cells':cells}
     return render(request,'cells.html',context)
-
-def report_view(request):
-    r_form =  Report_Form()
-    context = {'r_form':r_form}
-    return render(request, 'reports.html', context)
-
-def report_generate_view(request):
-    template_path = 'report_generate.html'
-    context = {'prisoners': Prisoner.objects.all()}
-    # Create a Django response object, and specify content_type as pdf
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'filename="report.pdf"'
-    # find the template and render it.
-    template = get_template(template_path)
-    html = template.render(context)
-
-    # create a pdf
-    pisa_status = pisa.CreatePDF(
-    html, dest=response)
-    # if error then show some funny view
-    #if pisa_status.errors:
-    #   return HttpResponse('We had some errors <pre>' + html + '</pre>')
-    return response
-    #return render(request, 'report_cells.html',context)
 
 def render_pdf_view(request):
     template_path = 'report_cells.html'

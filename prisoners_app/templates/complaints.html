@@ -46,7 +46,7 @@
                 <tr class="task resolved">
                 {% endif %}    
                     <td class="cell-icon"><i class="icon-checker high">{{forloop.counter}}</i></td>
-                    <td class="cell-title"><div><a href="{% url 'complaint_details' complaint.id %}">{{complaint.description}}</a></div></td>
+                    <td class="cell-title"><div><a href="{% url 'complaint_details' complaint.id %}">{{complaint.description|slice:80}}...</a></div></td>
                     <td class="cell-title"><div><a class="modal_delete" data-toggle="modal" data-target="#deletemodal" data-url="{% url 'prisoner_details_modal' complaint.prisoner.id %}" >{{complaint.prisoner}}</a></div></td>
                     <td class="cell-status hidden-phone hidden-tablet">
                         {% if complaint.status == "Approved" %}

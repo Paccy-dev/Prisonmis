@@ -43,7 +43,7 @@ class Prisoner(models.Model):
     firstname = models.CharField(max_length=30, default='None')
     lastname = models.CharField(max_length=30, default='None')
     email = models.EmailField(null=True,blank=True)
-    identification = models.IntegerField()
+    identification = models.IntegerField(max_length=16)
     phone = models.IntegerField(null=True,blank=True)
     crime = models.ForeignKey(Crime, on_delete=models.SET_NULL,null=True)
     cell = models.ForeignKey(Cell, on_delete=models.SET_NULL,null=True,blank=True)
@@ -68,7 +68,6 @@ class Visitor(models.Model):
 
     def __str__(self):
         return self.firstname + ' ' + self.lastname
-
 
 LEAVE_STATUS_CHOICES = (
     ("Pending", "Pending"),
@@ -111,7 +110,6 @@ class Transfer(models.Model):
     def __str__(self):
         return str(self.prisoner)
 
-
 class Release(models.Model):
     prisoner = models.ForeignKey(Prisoner, on_delete=models.CASCADE)
     date = models.DateField()
@@ -125,6 +123,7 @@ COMPLAINT_STATUS_CHOICES = (
     ("Denied", "Denied")
 )
 default_feedback = "Your complaints is still waiting approval"
+
 class Complaint(models.Model):
     prisoner = models.ForeignKey(Prisoner, on_delete=models.CASCADE)
     description = models.TextField()

@@ -1,0 +1,32 @@
+<table cellpadding="0" cellspacing="0" border="0"width="100%">
+    <thead>
+        <tr>
+            <th class="left">Order</th>
+            <th class="left">Prisoner</th>
+            <th class="left">Release Date</th>
+            <th class="left">Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% if instances.is_empty %}
+        <tr><td><b>No records</b></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        {% else %}
+        {% for instance in instances %}  
+        <tr>
+            <td>{{forloop.counter}}</td>
+            <td>{{instance.firstname}}&nbsp;&nbsp;&nbsp;{{instance.lastname}}</td>
+            <td>{{instance.release_date}}</td>
+            <td>
+                {% if end_date < today %}
+                |"Complete"|
+                {% else %}
+                |" Pending "|
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+        {% endif %}
+    </tbody>
+    <tfoot>
+    </tfoot>
+</table>
