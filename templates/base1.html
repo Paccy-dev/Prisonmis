@@ -112,6 +112,7 @@
                                 {% if user.category.name == 'Prison_Manager' %}
                                 <li><a href="{% url 'transfers' %}"><i class="menu-icon icon-random"></i>Transfers </a></li>
                                 <li><a href="{% url 'releases' %}"><i class="menu-icon icon-bullhorn"></i>Releases <b class="label green pull-right"></b></a></li>
+                                <li><a href="{% url 'reports' %}"><i class="menu-icon icon-book"></i> Reports </a></li>
                                 {% endif %}
                             </ul>
                             <!--/.widget-nav-->
@@ -119,7 +120,6 @@
                                 {% if user.category.name == 'Prison_Manager' %}
                                 <li><a href="{% url 'users' %}"><i class="menu-icon icon-user"></i> Users </a></li>
                                 <li><a href="{% url 'categorys' %}"><i class="menu-icon icon-bullhorn"></i> Categories </a></li>
-                                <li><a href="{% url 'reports' %}"><i class="menu-icon icon-book"></i> Reports </a></li>
                                 {% endif %}
                                 <li><a class="collapsed" data-toggle="collapse" href="#togglePages"><i class="menu-icon icon-cog">
                                 </i><i class="icon-chevron-down pull-right"></i><i class="icon-chevron-up pull-right">
